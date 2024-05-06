@@ -1,6 +1,6 @@
 #+title: Rust 语言圣经
-#+TAGS: 忽略(i) 没太懂(c)
-#+TODO: TODO(t) IGNORE(i) | NOTE(n!/@)
+#+TAGS: 忽略(i) 没太懂(c) 笔记(n)
+#+TODO: TODO(t) IGNORE(i) | NOTE(n!/@) FINISH(f)
 
 * IGNORE [[file:about-book.md][关于本书]]                                                               :忽略:
 * IGNORE [[file:into-rust.md][进入 Rust 编程世界]]                                                     :忽略:
@@ -17,7 +17,8 @@
 *** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
 ** TODO [[file:basic/intro.md][Rust 基础入门]]
 *** TODO [[file:basic/variable.md][变量绑定与解构]]
-*** TODO [[file:basic/base-type/index.md][基本类型]]
+*** FINISH [[file:basic/base-type/index.md][基本类型]]
+CLOSED: [2024-03-31 Sun 21:22]
 **** TODO [[file:basic/base-type/numbers.md][数值类型]]
 **** TODO [[file:basic/base-type/char-bool.md][字符、布尔、单元类型]]
 **** TODO [[file:basic/base-type/statement-expression.md][语句与表达式]]

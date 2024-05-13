@@ -17,9 +17,20 @@
 *** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
 ** TODO [[file:basic/intro.md][Rust 基础入门]]
 *** TODO [[file:basic/variable.md][变量绑定与解构]]
-*** FINISH [[file:basic/base-type/index.md][基本类型]]
+*** FINISH [[file:basic/base-type/index.md][基本类型]] [1/4]
 CLOSED: [2024-03-31 Sun 21:22]
-**** TODO [[file:basic/base-type/numbers.md][数值类型]]
+**** NOTE [[file:basic/base-type/numbers.md][数值类型]]
+CLOSED: [2024-05-13 Mon 22:31]
+:LOGBOOK:
+- State "NOTE"       from "IGNORE"     [2024-05-13 Mon 22:31]
+:END:
+
+对数整数, 有debug 和 release 不同环境下,溢出的表现不同, 可以使用 =wrapping_*, checked_*, overflowing_*, saturatin_*= 等方法
+
+浮点数比较特殊, 没有实现 Eq trait, 浮点数比较相等, 一般使用相减得到某个精度返回内的相等. 还有浮点操作结果可能是 NaN, NaN 和 NaN 是不相等的
+
+range 可以使用数字如, =1..5=, 或者 ~1..=5~ ,还可以使用字符返回如 ~'a'..'z'~
+
 **** TODO [[file:basic/base-type/char-bool.md][字符、布尔、单元类型]]
 **** TODO [[file:basic/base-type/statement-expression.md][语句与表达式]]
 **** TODO [[file:basic/base-type/function.md][函数]]

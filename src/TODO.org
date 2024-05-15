@@ -17,8 +17,12 @@
 *** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
 ** TODO [[file:basic/intro.md][Rust 基础入门]]
 *** TODO [[file:basic/variable.md][变量绑定与解构]]
-*** FINISH [[file:basic/base-type/index.md][基本类型]] [4/4]
+*** NOTE [[file:basic/base-type/index.md][基本类型]] [4/4]                                                       :笔记:
 CLOSED: [2024-03-31 Sun 21:22]
+:LOGBOOK:
+- State "NOTE"       from "FINISH"     [2024-05-15 Wed 21:49]
+:END:
+
 **** NOTE [[file:basic/base-type/numbers.md][数值类型]]
 CLOSED: [2024-05-13 Mon 22:31]
 :LOGBOOK:
@@ -37,9 +41,48 @@ CLOSED: [2024-05-13 Mon 22:41]
 CLOSED: [2024-05-13 Mon 22:46]
 **** FINISH [[file:basic/base-type/function.md][函数]]
 CLOSED: [2024-05-13 Mon 22:58]
-*** TODO [[file:basic/ownership/index.md][所有权和借用]]
-**** TODO [[file:basic/ownership/ownership.md][所有权]]
-**** TODO [[file:basic/ownership/borrowing.md][引用与借用]]
+*** NOTE [[file:basic/ownership/index.md][所有权和借用]] [2/2]                                                   :笔记:
+CLOSED: [2024-05-15 Wed 21:49]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 21:49]
+:END:
+
+**** FINISH [[file:basic/ownership/ownership.md][所有权]]
+CLOSED: [2024-05-15 Wed 21:40]
+**** NOTE [[file:basic/ownership/borrowing.md][引用与借用]]
+CLOSED: [2024-05-15 Wed 21:40]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 21:40]
+:END:
+
+基本类型: i8,i32等等 变量绑定后执行 如 ~let y=x~ 会在栈中 copy 一份, 而 String 这种是转移所有权. 但是仍然有个有意思的地方就是 ~&T~ 也是类型, 且是基本类型, 基本类型实现了 Copy Trait, 因此在栈上复制一份. 更加要注意的是 ~&mut T~ 也是类型, 并且没有实现 Copy Trait,所以就会转移所有权, ~let a =10; let x = &mut a; let y=x;~
+#+begin_src rustic :result output code :wrap src txt
+  fn main(){
+      let mut a:i32 =10;
+      let x = &mut a;
+      let y=x;
+      println!("{},{}",x,y);
+  }
+#+end_src
+
+#+RESULTS:
+#+begin_src text
+  error[E0382]: borrow of moved value: `x`
+   --> src/main.rs:6:22
+    |
+  4 |     let x = &mut a;
+    |         - move occurs because `x` has type `&mut i32`, which does not implement the `Copy` trait
+  5 |     let y=x;
+    |           - value moved here
+  6 |     println!("{},{}",x,y);
+    |                      ^ value borrowed here after move
+    |
+    = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+  For more information about this error, try `rustc --explain E0382`.
+  error: could not compile `cargoqvod5U` (bin "cargoqvod5U") due to 1 previous error
+#+end_src
+
 *** TODO [[file:basic/compound-type/intro.md][复合类型]]
 **** TODO [[file:basic/compound-type/string-slice.md][字符串与切片]]
 **** TODO [[file:basic/compound-type/tuple.md][元组]]

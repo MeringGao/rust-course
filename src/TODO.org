@@ -83,7 +83,12 @@ CLOSED: [2024-05-15 Wed 21:40]
   error: could not compile `cargoqvod5U` (bin "cargoqvod5U") due to 1 previous error
 #+end_src
 
-*** TODO [[file:basic/compound-type/intro.md][复合类型]] [3/5]
+*** NOTE [[file:basic/compound-type/intro.md][复合类型]] [5/5]                                                       :笔记:
+CLOSED: [2024-05-17 Fri 23:16]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:16]
+:END:
+
 **** NOTE [[file:basic/compound-type/string-slice.md][字符串与切片]]
 CLOSED: [2024-05-15 Wed 22:00]
 :LOGBOOK:
@@ -110,6 +115,7 @@ CLOSED: [2024-05-15 Wed 22:00]
 
 **** FINISH [[file:basic/compound-type/tuple.md][元组]]
 CLOSED: [2024-05-15 Wed 22:30]
+
 **** NOTE [[file:basic/compound-type/struct.md][结构体]]
 CLOSED: [2024-05-15 Wed 22:38]
 :LOGBOOK:
@@ -140,15 +146,71 @@ CLOSED: [2024-05-15 Wed 22:38]
 
 元组结构体在某些情况下可读性更强
 
-**** TODO [[file:basic/compound-type/enum.md][枚举]]
-**** TODO [[file:basic/compound-type/array.md][数组]]
-*** TODO [[file:basic/flow-control.md][流程控制]]
-*** TODO [[file:basic/match-pattern/intro.md][模式匹配]]
-**** TODO [[file:basic/match-pattern/match-if-let.md][match 和 if let]]
-**** TODO [[file:basic/match-pattern/option.md][解构 Option]]
-**** TODO [[file:basic/match-pattern/pattern-match.md][模式适用场景]]
-**** TODO [[file:basic/match-pattern/all-patterns.md][全模式列表]]
-*** TODO [[file:basic/method.md][方法 Method]]
+**** FINISH [[file:basic/compound-type/enum.md][枚举]]
+CLOSED: [2024-05-17 Fri 23:12]
+
+**** NOTE [[file:basic/compound-type/array.md][数组]]
+CLOSED: [2024-05-17 Fri 23:12]
+:LOGBOOK:
+- State "NOTE"       from "FINISH"     [2024-05-17 Fri 23:13]
+:END:
+
+数组类型: ~[i32, 10]~ 和 ~[i32,5]~ 是不同的类型, 注意区别就在于数组元素个
+数上. 如果一个函数希望接收数组类型, 那么有一种方式是使用 切片 ~&[T]~ 或
+者 ~fn some<T, const C:usize>(ar: [T,C])~ 用不可变的泛型类型
+
+*** NOTE [[file:basic/flow-control.md][流程控制]]
+CLOSED: [2024-05-17 Fri 23:17]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:17]
+:END:
+
+for 循环
+
+| 使用方法                      | 等价使用方式                                      | 所有权     |
+| ----------------------------- | ------------------------------------------------- | ---------- |
+| ~for item in collection~        | ~for item in IntoIterator::into_iter(collection)~   | 转移所有权 |
+| ~for item in &collection~       | ~for item in collection.iter()~                     | 不可变借用 |
+| ~for item in &mut collection~   | ~for item in collection.iter_mut()~                 | 可变借用   |
+
+loop 表达式可以通过 ~break value~ 返回值
+
+~if let pattern=value~ 和 ~while let pattern=value~ 都是可驳模式, 不需要穷尽. 而 ~let Some(x)=value;~ 就是
+错误的,他是不可驳模式,少了 None 匹配.
+
+*** NOTE [[file:basic/match-pattern/intro.md][模式匹配]]                                                             :笔记:
+CLOSED: [2024-05-17 Fri 23:30]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:30]
+:END:
+
+**** NOTE [[file:basic/match-pattern/match-if-let.md][match 和 if let]]
+CLOSED: [2024-05-17 Fri 23:22]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:22]
+:END:
+~v.iter().filter(|x| x == MyEnum::Foo);~ 语法是错误的, x 无法直接和枚举成员比较, 需要使用 match ,
+~matches!~ 更加简洁一些 ~v.iter().filter(|x| matches!(x, MyEnum::Foo));~
+
+**** FINISH [[file:basic/match-pattern/option.md][解构 Option]]
+CLOSED: [2024-05-17 Fri 23:24]
+
+**** FINISH [[file:basic/match-pattern/pattern-match.md][模式适用场景]]
+CLOSED: [2024-05-17 Fri 23:25]
+
+**** NOTE [[file:basic/match-pattern/all-patterns.md][全模式列表]]
+CLOSED: [2024-05-17 Fri 23:25]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:25]
+:END:
+
+match 匹配中 有些好用的例如: ~'a'..='y'~
+
+解构变量如: ~let p @ Point{x:a,y:b,..}=p;~
+
+*** FINISH [[file:basic/method.md][方法 Method]]
+CLOSED: [2024-05-17 Fri 23:29]
+
 *** TODO [[file:basic/trait/intro.md][泛型和特征]]
 **** TODO [[file:basic/trait/generic.md][泛型 Generics]]
 **** TODO [[file:basic/trait/trait.md][特征 Trait]]

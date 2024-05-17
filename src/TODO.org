@@ -83,10 +83,63 @@ CLOSED: [2024-05-15 Wed 21:40]
   error: could not compile `cargoqvod5U` (bin "cargoqvod5U") due to 1 previous error
 #+end_src
 
-*** TODO [[file:basic/compound-type/intro.md][复合类型]]
-**** TODO [[file:basic/compound-type/string-slice.md][字符串与切片]]
-**** TODO [[file:basic/compound-type/tuple.md][元组]]
-**** TODO [[file:basic/compound-type/struct.md][结构体]]
+*** TODO [[file:basic/compound-type/intro.md][复合类型]] [3/5]
+**** NOTE [[file:basic/compound-type/string-slice.md][字符串与切片]]
+CLOSED: [2024-05-15 Wed 22:00]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 22:00]
+:END:
+
+一定要注意 &str 是 String 切片, /&String 是字符串引用/
+
+~[T:数字]~ 是数组类型 ~&[T]~ 是切片引用 ~[T]~ 是他解引用后的类型;
+
+#+begin_src rustic
+  let a:&str = "asdf";
+  let b:&String = &String::new();
+  let c:&str = &b[..];
+  let x:[i32;10] = [1; 10];
+  let y:&[i32] = &x[..6];
+  let z:[i32] = *y;
+#+end_src
+
+*重点要注意的是String 是 UTF-8 存储的, 对他进行切片一定在字符串的边界上,否
+则会出错, 原因是他的切面位置是按照字节进行的,而不是按照字符进行.*
+
+*String 的相关方法一定要搞清楚是字符为单位,还是字节为单位*
+
+**** FINISH [[file:basic/compound-type/tuple.md][元组]]
+CLOSED: [2024-05-15 Wed 22:30]
+**** NOTE [[file:basic/compound-type/struct.md][结构体]]
+CLOSED: [2024-05-15 Wed 22:38]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 22:38]
+:END:
+
+结构体某些字段转移, 就无法再使用了, 但是他的其他字段仍然是可以访问的.
+
+#+begin_src rustic
+  struct User{
+      username: String,
+      age: u32
+  }
+
+  let u1 = User{
+      username: String::from("账单"),
+      age: 10
+  }
+  let u2=User{
+      username:u1.username,
+      age: 11
+  }
+
+  println!("{}",u1); // 这里会报错
+  println!("{}",u1.age); // 这里不会报错
+
+#+end_src
+
+元组结构体在某些情况下可读性更强
+
 **** TODO [[file:basic/compound-type/enum.md][枚举]]
 **** TODO [[file:basic/compound-type/array.md][数组]]
 *** TODO [[file:basic/flow-control.md][流程控制]]

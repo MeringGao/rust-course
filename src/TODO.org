@@ -15,7 +15,7 @@
 *** IGNORE [[file:first-try/cargo.md][认识 Cargo]]
 *** IGNORE [[file:first-try/hello-world.md][不仅仅是 Hello world]]
 *** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
-** TODO [[file:basic/intro.md][Rust 基础入门]] [8/14]
+** TODO [[file:basic/intro.md][Rust 基础入门]] [9/14]
 *** IGNORE [[file:basic/variable.md][变量绑定与解构]]
 *** NOTE [[file:basic/base-type/index.md][基本类型]] [4/4]                                                       :笔记:
 CLOSED: [2024-03-31 Sun 21:22]
@@ -376,7 +376,12 @@ CLOSED: [2024-05-18 Sat 21:50]
 
 要把 rust 杂志里面 trait 那一章仔细理解几遍
 
-*** TODO [[file:basic/collections/intro.md][集合类型]] [1/2]
+*** NOTE [[file:basic/collections/intro.md][集合类型]] [2/2]                                                       :笔记:
+CLOSED: [2024-05-18 Sat 22:39]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 22:39]
+:END:
+
 **** NOTE [[file:basic/collections/vector.md][动态数组 Vector]]
 CLOSED: [2024-05-18 Sat 22:22]
 :LOGBOOK:
@@ -391,7 +396,20 @@ CLOSED: [2024-05-18 Sat 22:22]
 
 总体而言， ~非稳定~ 排序的算法的速度会优于 ~稳定~ 排序算法，同时， ~稳定~ 排序还会额外分配原数组一半的空间。
 
-**** TODO [[file:basic/collections/hashmap.md][KV 存储 HashMap]]
+**** NOTE [[file:basic/collections/hashmap.md][KV 存储 HashMap]]
+CLOSED: [2024-05-18 Sat 22:35]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 22:35]
+:END:
+
+~map.entry(word).or_insert(0);~ 快速判断 key 是否存在, 不存在直接插值, 存在返回该值, or_insert 也会返
+回插入后的值
+
+hash 函数对不同的 key 计算 hash 值, 对于性能强的 hash 函数,冲突概率可能较高, 因此会被用于攻击, 而安
+全性强的 hash 函数性能较弱一些, 需要使用一些密码学技术, hashmap 默认使用了这种函数
+
+要追求性能可以找三方库试试,如 ahash, SipHash
+
 *** TODO [[file:basic/lifetime.md][认识生命周期]]
 *** TODO [[file:basic/result-error/intro.md][返回值和错误处理]] [0/2]
 **** TODO [[file:basic/result-error/panic.md][panic! 深入剖析]]

@@ -15,7 +15,7 @@
 *** IGNORE [[file:first-try/cargo.md][认识 Cargo]]
 *** IGNORE [[file:first-try/hello-world.md][不仅仅是 Hello world]]
 *** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
-** TODO [[file:basic/intro.md][Rust 基础入门]] [9/14]
+** TODO [[file:basic/intro.md][Rust 基础入门]] [10/14]
 *** IGNORE [[file:basic/variable.md][变量绑定与解构]]
 *** NOTE [[file:basic/base-type/index.md][基本类型]] [4/4]                                                       :笔记:
 CLOSED: [2024-03-31 Sun 21:22]
@@ -379,8 +379,50 @@ CLOSED: [2024-05-18 Sat 21:50]
 *** NOTE [[file:basic/collections/intro.md][集合类型]] [2/2]                                                       :笔记:
 CLOSED: [2024-05-18 Sat 22:39]
 :LOGBOOK:
+- State "NOTE"       from "NOTE"       [2024-05-18 Sat 22:48]
 - State "NOTE"       from "TODO"       [2024-05-18 Sat 22:39]
 :END:
+
+生命周期, 在 rust 中是新玩意, 每个值都有生命周期, rust 中会给每个值计算生命周期, 但是当存在多个引用
+时 rust 可能自己算不出来,或者算不清楚, 这个时候需要人为的帮助它进行识别, 因此需要认为给参数或者值标
+识生命周期
+
+需要注意的是标注只是帮助编译器,并不会对引用的作用域有任何改动.
+
+#+begin_src rustic
+  &i32        // 一个引用
+  &'a i32     // 具有显式生命周期的引用
+  &'a mut i32 // 具有显式生命周期的可变引用
+#+end_src
+
+~fn useless<'a>(first: &'a i32, second: &'a i32) {}~
+
+该函数签名表明对于某些生命周期 ~'a~ ，函数的两个参数都至少跟 ~'a~ 活得一样久，同时函数的返回引用也至少跟
+~'a~ 活得一样久。实际上，这意味着返回值的生命周期与参数生命周期中的较小值一致：虽然两个参数的生命周期
+都是标注了 ~'a~ ，但是实际上这两个参数的真实生命周期可能是不一样的（生命周期 ~'a~ 不代表生命周期等于 ~'a~
+，而是大于等于 ~'a~ ）。
+
+当把具体的引用传给 ~longest~ 时，那生命周期 ~'a~ 的大小就是 ~x~ 和 ~y~ 的作用域的重合部分，换句话说，~'a~ 的
+大小将等于 ~x~ 和 ~y~ 中较小的那个。由于返回值的生命周期也被标记为 ~'a~ ，因此返回值的生命周期也是 ~x~ 和 ~y~
+中作用域较小的那个。
+
+#+begin_src rustic
+  fn main() {
+      let string1 = String::from("long string is long");
+      let result;
+      {
+          let string2 = String::from("xyz");
+          // longest<'a>(s1: &'a str, s2: &'a str)->&'a str{}
+          // 'a 这里可以理解为生命周期较小的那个, 也就是 string2
+          // result 也是 'a 周期, 所以他和 string2 生命周期相等,
+          // string2 离开了作用域, result 也就离开了, 因此println 编译不通过
+          result = longest(string1.as_str(), string2.as_str());
+
+      }
+      println!("The longest string is {}", result);
+  }
+
+#+end_src
 
 **** NOTE [[file:basic/collections/vector.md][动态数组 Vector]]
 CLOSED: [2024-05-18 Sat 22:22]
@@ -410,9 +452,59 @@ hash 函数对不同的 key 计算 hash 值, 对于性能强的 hash 函数,冲�
 
 要追求性能可以找三方库试试,如 ahash, SipHash
 
-*** TODO [[file:basic/lifetime.md][认识生命周期]]
-*** TODO [[file:basic/result-error/intro.md][返回值和错误处理]] [0/2]
-**** TODO [[file:basic/result-error/panic.md][panic! 深入剖析]]
+*** FINISH [[file:basic/lifetime.md][认识生命周期]]
+CLOSED: [2024-05-19 Sun 20:13]
+*** TODO [[file:basic/result-error/intro.md][返回值和错误处理]] [1/2]
+**** NOTE [[file:basic/result-error/panic.md][panic! 深入剖析]]
+CLOSED: [2024-05-19 Sun 20:18]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 20:18]
+:END:
+
+在 Rust 中，可以使用标准库中的 std::panic 模块提供的 catch_unwind 函数来捕获 panic。这个函数会捕获传
+给它的闭包中发生的 panic，并返回一个 Result。如果闭包没有 panic，那么返回的 Result 就是 Ok，其中包含
+了闭包的返回值。如果闭包 panic 了，那么返回的 Result 就是 Err，其中包含了 panic 的信息。
+
+#+begin_src rustic
+  use std::panic::{self, AssertUnwindSafe};
+
+  fn main() {
+      let result = panic::catch_unwind(AssertUnwindSafe(|| {
+
+          println!("hello!");
+          let v=vec![1,2,3];
+          v[99];
+          println!("goodbye!");
+      }));
+
+      match result {
+          Ok(_) => println!("执行成功"),
+          Err(err) => println!("捕获到 panic: {:?}", err),
+      }
+
+      println!("panic 之后继续执行");
+  }
+#+end_src
+
+#+RESULTS:
+: hello!
+: thread 'main' panicked at src/main.rs:9:10:
+: index out of bounds: the len is 3 but the index is 99
+: note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+: 捕获到 panic: Any { .. }
+: panic 之后继续执行
+
+debug 和 release 末实现都可以定义 panic 时的行为
+
+#+begin_src toml
+  [profile.release]
+  panic = 'abort'
+#+end_src
+
+可以自定义 panic 时的处理函数 https://doc.rust-lang.org/std/panic/fn.set_hook.html
+
+panic 还有一些比较深入的处理过程, 参考秘典之类的书籍
+
 **** TODO [[file:basic/result-error/result.md][返回值 Result 和?]]
 *** TODO [[file:basic/crate-module/intro.md][包和模块]] [0/3]
 **** TODO [[file:basic/crate-module/crate.md][包 Crate]]

@@ -15,7 +15,7 @@
 *** IGNORE [[file:first-try/cargo.md][认识 Cargo]]
 *** IGNORE [[file:first-try/hello-world.md][不仅仅是 Hello world]]
 *** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
-** TODO [[file:basic/intro.md][Rust 基础入门]] [10/14]
+** TODO [[file:basic/intro.md][Rust 基础入门]] [11/14]
 *** IGNORE [[file:basic/variable.md][变量绑定与解构]]
 *** NOTE [[file:basic/base-type/index.md][基本类型]] [4/4]                                                       :笔记:
 CLOSED: [2024-03-31 Sun 21:22]
@@ -454,7 +454,12 @@ hash 函数对不同的 key 计算 hash 值, 对于性能强的 hash 函数,冲�
 
 *** FINISH [[file:basic/lifetime.md][认识生命周期]]
 CLOSED: [2024-05-19 Sun 20:13]
-*** TODO [[file:basic/result-error/intro.md][返回值和错误处理]] [1/2]
+*** NOTE [[file:basic/result-error/intro.md][返回值和错误处理]] [2/2]                                               :笔记:
+CLOSED: [2024-05-19 Sun 22:03]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 22:03]
+:END:
+
 **** NOTE [[file:basic/result-error/panic.md][panic! 深入剖析]]
 CLOSED: [2024-05-19 Sun 20:18]
 :LOGBOOK:
@@ -505,7 +510,30 @@ debug 和 release 末实现都可以定义 panic 时的行为
 
 panic 还有一些比较深入的处理过程, 参考秘典之类的书籍
 
-**** TODO [[file:basic/result-error/result.md][返回值 Result 和?]]
+**** NOTE [[file:basic/result-error/result.md][返回值 Result 和?]]
+CLOSED: [2024-05-19 Sun 21:55]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 21:55]
+:END:
+
+对于 ~?~ 操作服务, 返回值的签名和实际返回值错误类型是要兼容的,也就是实现了 From 特征, 就可以通过一种大
+而全的方式
+
+错误的类型也可以通过进行大而全的包裹, 也就是只要实现了 Error 特征, 但是这种会丢失错误原始信息
+#+begin_src rustic
+  use std::error::Error;
+  use std::fs::File;
+
+  fn main() -> Result<(), Box<dyn Error>> {
+      let f = File::open("hello.txt")?;
+
+      Ok(())
+  }
+#+end_src
+
+
+当然 option 类型也是可以 ~?~ 操作的
+
 *** TODO [[file:basic/crate-module/intro.md][包和模块]] [0/3]
 **** TODO [[file:basic/crate-module/crate.md][包 Crate]]
 **** TODO [[file:basic/crate-module/module.md][模块 Module]]

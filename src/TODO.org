@@ -8,14 +8,24 @@
 * IGNORE [[file:community.md][社区和锈书]]                                                             :忽略:
 * TODO [[file:some-thoughts.md][Xobserve: 一切皆可观测]]
 * TODO [[file:beat-ai.md][BeatAI: 工程师 AI 入门圣经]]
-* TODO Rust 语言基础学习 [1/3]
+* NOTE Rust 语言基础学习 [3/3]
+CLOSED: [2024-05-20 Mon 19:36]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:36]
+:END:
+
 ** IGNORE [[file:first-try/intro.md][寻找牛刀，以便小试]]                                                   :忽略:
 *** IGNORE [[file:first-try/installation.md][安装 Rust 环境]]
 *** IGNORE [[file:first-try/editor.md][墙推 VSCode!]]
 *** IGNORE [[file:first-try/cargo.md][认识 Cargo]]
 *** IGNORE [[file:first-try/hello-world.md][不仅仅是 Hello world]]
 *** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
-** TODO [[file:basic/intro.md][Rust 基础入门]] [11/14]
+** NOTE [[file:basic/intro.md][Rust 基础入门]] [14/14]                                                  :笔记:
+CLOSED: [2024-05-20 Mon 19:35]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:35]
+:END:
+
 *** IGNORE [[file:basic/variable.md][变量绑定与解构]]
 *** NOTE [[file:basic/base-type/index.md][基本类型]] [4/4]                                                       :笔记:
 CLOSED: [2024-03-31 Sun 21:22]
@@ -534,19 +544,64 @@ CLOSED: [2024-05-19 Sun 21:55]
 
 当然 option 类型也是可以 ~?~ 操作的
 
-*** TODO [[file:basic/crate-module/intro.md][包和模块]] [0/3]
-**** TODO [[file:basic/crate-module/crate.md][包 Crate]]
-**** TODO [[file:basic/crate-module/module.md][模块 Module]]
-**** TODO [[file:basic/crate-module/use.md][使用 use 引入模块及受限可见性]]
-*** TODO [[file:basic/comment.md][注释和文档]]
-*** TODO [[file:basic/formatted-output.md][格式化输出]]
-** TODO [[file:basic-practice/intro.md][入门实战:文件搜索工具]] [0/6]
-*** TODO [[file:basic-practice/base-features.md][基本功能]]
-*** TODO [[file:basic-practice/refactoring.md][增加模块化和错误处理]]
-*** TODO [[file:basic-practice/tests.md][测试驱动开发]]
-*** TODO [[file:basic-practice/envs.md][使用环境变量]]
-*** TODO [[file:basic-practice/stderr.md][重定向错误信息的输出]]
-*** TODO [[file:basic-practice/iterators.md][使用迭代器来改进程序(可选)]]
+*** NOTE [[file:basic/crate-module/intro.md][包和模块]] [3/3]                                                       :笔记:
+CLOSED: [2024-05-20 Mon 19:34]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:34]
+:END:
+
+**** NOTE [[file:basic/crate-module/crate.md][包 Crate]]
+CLOSED: [2024-05-19 Sun 22:09]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 22:09]
+:END:
+
+- 项目(Package)：可以用来构建、测试和分享包
+- 工作空间(WorkSpace)：对于大型项目，可以进一步将多个包联合在一起，组织成工作空间
+- 包(Crate)：一个由多个模块组成的树形结构，可以作为三方库进行分发，也可以生成可执行文件进行运行
+- 模块(Module)：可以一个文件多个模块，也可以一个文件一个模块，模块可以被认为是真实项目中的代码组织单元
+
+关注一下 Workspace 的内容, 这里没有讲到
+
+一般 main 作为主业务逻辑, mod 放在 lib 中, 在 main 中引用
+
+**** FINISH [[file:basic/crate-module/module.md][模块 Module]]
+CLOSED: [2024-05-20 Mon 19:31]
+**** FINISH [[file:basic/crate-module/use.md][使用 use 引入模块及受限可见性]]
+CLOSED: [2024-05-20 Mon 19:31]
+*** NOTE [[file:basic/comment.md][注释和文档]]                                                           :笔记:
+CLOSED: [2024-05-20 Mon 19:31]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:31]
+:END:
+
+一般 lib.rs 顶部 ~//!~ 或这 ~/*!  */~ 定义 lib 库的整体说明, 每个 mod 独立文件中可以定义, 也可以在 ~mod
+xxx{文档}~
+
+~///~ 这种就是函数或者结构体这种的文档
+
+*** NOTE [[file:basic/formatted-output.md][格式化输出]]
+CLOSED: [2024-05-20 Mon 19:34]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:34]
+:END:
+
+需要的时候过来找
+
+** FINISH [[file:basic-practice/intro.md][入门实战:文件搜索工具]] [6/6]
+CLOSED: [2024-05-20 Mon 19:34]
+*** FINISH [[file:basic-practice/base-features.md][基本功能]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/refactoring.md][增加模块化和错误处理]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/tests.md][测试驱动开发]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/envs.md][使用环境变量]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/stderr.md][重定向错误信息的输出]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/iterators.md][使用迭代器来改进程序(可选)]]
+CLOSED: [2024-05-20 Mon 19:35]
 
 * TODO Rust 语言进阶学习
 ** TODO [[file:advance/intro.md][Rust 高级进阶]]

@@ -604,7 +604,7 @@ CLOSED: [2024-05-20 Mon 19:35]
 CLOSED: [2024-05-20 Mon 19:35]
 
 * TODO Rust 语言进阶学习
-** TODO [[file:advance/intro.md][Rust 高级进阶]] [2/11]
+** TODO [[file:advance/intro.md][Rust 高级进阶]] [6/11]
 *** NOTE [[file:advance/lifetime/intro.md][生命周期]] [2/2]                                                       :笔记:
 CLOSED: [2024-05-20 Mon 23:11]
 :LOGBOOK:
@@ -691,27 +691,410 @@ Option,如过是 Some 就继续迭代, None 就停止. 我们也可以自己调�
 
 ~找迭代器适配器有哪些~, ~消费性又有那些~
 
-*** TODO [[file:advance/into-types/intro.md][深入类型]] [0/4]
-**** TODO [[file:advance/into-types/converse.md][类型转换]]
-**** TODO [[file:advance/into-types/custom-type.md][newtype 和 类型别名]]
-**** TODO [[file:advance/into-types/sized.md][Sized 和不定长类型 DST]]
-**** TODO [[file:advance/into-types/enum-int.md][枚举和整数]]
-*** TODO [[file:advance/smart-pointer/intro.md][智能指针]] [0/5]
-**** TODO [[file:advance/smart-pointer/box.md][Box<T>堆对象分配]]
-**** TODO [[file:advance/smart-pointer/deref.md][Deref 解引用]]
-**** TODO [[file:advance/smart-pointer/drop.md][Drop 释放资源]]
-**** TODO [[file:advance/smart-pointer/rc-arc.md][Rc 与 Arc 实现 1vN 所有权机制]]
-**** TODO [[file:advance/smart-pointer/cell-refcell.md][Cell 与 RefCell 内部可变性]]
-*** TODO [[file:advance/circle-self-ref/intro.md][循环引用与自引用]] [0/2]
-**** TODO [[file:advance/circle-self-ref/circle-reference.md][Weak 与循环引用]]
-**** TODO [[file:advance/circle-self-ref/self-referential.md)][结构体中的自引用]]
-*** TODO [[file:advance/concurrency-with-threads/intro.md][多线程并发编程]] [0/6]
-**** TODO [[file:advance/concurrency-with-threads/concurrency-parallelism.md][并发和并行]]
-**** TODO [[file:advance/concurrency-with-threads/thread.md][使用多线程]]
-**** TODO [[file:advance/concurrency-with-threads/message-passing.md][线程同步:消息传递]]
-**** TODO [[file:advance/concurrency-with-threads/sync1.md][线程同步:锁、Condvar 和信号量]]
-**** TODO [[file:advance/concurrency-with-threads/sync2.md][线程同步:Atomic 原子操作与内存顺序]]
-**** TODO [[file:advance/concurrency-with-threads/send-sync.md][基于 Send 和 Sync 的线程安全]]
+*** NOTE [[file:advance/into-types/intro.md][深入类型]] [4/4]                                                       :笔记:
+CLOSED: [2024-05-26 Sun 00:44]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:44]
+:END:
+
+**** NOTE [[file:advance/into-types/converse.md][类型转换]]
+CLOSED: [2024-05-26 Sun 00:44]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:44]
+:END:
+
+主要是 as, From TryFrom TryInto 这类 Trait
+
+**** NOTE [[file:advance/into-types/custom-type.md][newtype 和 类型别名]]
+CLOSED: [2024-05-26 Sun 00:25]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:25]
+:END:
+
+借助于元组结构体可以将已有类型包装起来, 然后去实现对已有类型的额外操作
+
+~type xxx=yyy~ 可以实现类型别名提升可读性,减少代码重复编写。
+
+**** NOTE [[file:advance/into-types/sized.md][Sized 和不定长类型 DST]]
+CLOSED: [2024-05-26 Sun 00:29]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:29]
+:END:
+
+DST 动态类型,并不是指 String,Vec 之类的在运行期间内存使用可以动态变换的类型,他们只是数据存储在堆上,
+但是栈上有一块固定大小存储着一个引用类型,包含了内存地址,元素数量,分配空间等信息, 通过这些信息,编译器
+知道他们的实际大小。最重要是栈上的引用类型是大小固定的,因此他们也是固定大小的类型。
+
+动态类型是指编译器无法获知累类型大小, 如过在代码中使用 DST 编译无法通过
+#+begin_src rustic
+  fn my_function(n: usize) {
+      let array = [123; n];
+  }
+#+end_src
+n 在编译器无法知道大小, 而数组类型的一个组成部分就是长度, 长度是动态的, 就变成了 DST 了, 另外切片也是 DST 也就是 ~[T]~, 但是切片引用不是 DST ~&[T]~, 因为切片引用存储在栈上,包含固定大小(指针直线堆,长度信息等)
+
+特征对象只能通过引用或者 Box 方式来使用特征对象
+#+begin_src rustic
+  fn foobar_1(thing: &dyn MyThing) {}     // OK
+  fn foobar_2(thing: Box<dyn MyThing>) {} // OK
+  fn foobar_3(thing: MyThing) {}          // ERROR!
+#+end_src
+
+#+begin_src rustic
+  fn generic<T: ?Sized>(t: &T) {
+      // --snip--
+  }
+#+end_src
+
+~?Sized~ 特征用于表明类型 T 既有可能是固定大小的类型，也可能是动态大小的类型。还有一点要注意的是，函数
+参数类型从 T 变成了 &T，因为 T 可能是动态大小的，因此需要用一个固定大小的指针(引用)来包裹它。
+
+如何把一个动态大小类型转换成固定大小的类型：使用引用指向这些动态数据，然后在引用中存储相关的内存位置、
+长度等信息。
+
+Box<str> 使用了一个引用来指向 str，嗯，满足了第一个条件。但是第二个条件呢？Box 中有该 str 的长度信息
+吗？显然是 No。那为什么特征就可以变成特征对象？其实这个还蛮复杂的，简单来说，对于特征对象，编译器无
+需知道它具体是什么类型，只要知道它能调用哪几个方法即可，因此编译器帮我们实现了剩下的一切。
+
+
+
+
+
+**** NOTE [[file:advance/into-types/enum-int.md][枚举和整数]]
+CLOSED: [2024-05-26 Sun 00:43]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:43]
+:END:
+
+用到再看
+
+*** NOTE [[file:advance/smart-pointer/intro.md][智能指针]] [5/5]                                                       :笔记:
+CLOSED: [2024-05-26 Sun 00:17]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:17]
+:END:
+
+**** NOTE [[file:advance/smart-pointer/box.md][Box<T>堆对象分配]]
+CLOSED: [2024-05-26 Sun 00:16]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:16]
+:END:
+
+Box::leak 再仔细看看
+
+**** FINISH [[file:advance/smart-pointer/deref.md][Deref 解引用]]
+CLOSED: [2024-05-26 Sun 00:16]
+**** FINISH [[file:advance/smart-pointer/drop.md][Drop 释放资源]]
+CLOSED: [2024-05-26 Sun 00:16]
+**** FINISH [[file:advance/smart-pointer/rc-arc.md][Rc 与 Arc 实现 1vN 所有权机制]]
+CLOSED: [2024-05-26 Sun 00:16]
+**** FINISH [[file:advance/smart-pointer/cell-refcell.md][Cell 与 RefCell 内部可变性]]
+CLOSED: [2024-05-26 Sun 00:16]
+*** NOTE [[file:advance/circle-self-ref/intro.md][循环引用与自引用]] [2/2]                                               :笔记:
+CLOSED: [2024-05-26 Sun 00:23]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:23]
+:END:
+
+**** NOTE [[file:advance/circle-self-ref/circle-reference.md][Weak 与循环引用]]
+CLOSED: [2024-05-26 Sun 00:19]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:19]
+:END:
+
+| Weak                                            | Rc                                        |
+| ----------------------------------------------- | ----------------------------------------- |
+| 不计数                                           | 引用计数                                    |
+| 不拥有所有权                                      | 拥有值的所有权                               |
+| 不阻止值被释放(drop)                               | 所有权计数归零，才能 drop                    |
+| 引用的值存在返回 Some，不存在返回 None               | 引用的值必定存在                             |
+| 通过 upgrade 取到 Option<Rc<T>>，然后再取值        | 通过 Deref 自动解引用，取值无需任何操作        |
+
+通过这个对比，可以非常清晰的看出 Weak 为何这么弱，而这种弱恰恰非常适合我们实现以下的场景：
+
+- 持有一个 Rc 对象的临时引用，并且不在乎引用的值是否依然存在
+- 阻止 Rc 导致的循环引用，因为 Rc 的所有权机制，会导致多个 Rc 都无法计数归零
+
+使用方式简单总结下：对于父子引用关系，可以让父节点通过 Rc 来引用子节点，然后让子节点通过 Weak 来引用
+父节点。
+
+**** NOTE [[file:advance/circle-self-ref/self-referential.md][结构体中的自引用]]
+CLOSED: [2024-05-26 Sun 00:22]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:22]
+:END:
+
+用到了再看, 主要是 Option, unsafe, Pin 实现
+
+*** NOTE [[file:advance/concurrency-with-threads/intro.md][多线程并发编程]] [6/6]                                                 :笔记:
+CLOSED: [2024-05-26 Sun 00:15]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:15]
+:END:
+
+**** FINISH [[file:advance/concurrency-with-threads/concurrency-parallelism.md][并发和并行]]
+CLOSED: [2024-05-25 Sat 21:44]
+**** NOTE [[file:advance/concurrency-with-threads/thread.md][使用多线程]]
+CLOSED: [2024-05-25 Sat 21:45]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-25 Sat 21:45]
+:END:
+
+rust 中线程没有提供杀死的接口, 原因可能是线程直接杀死导致内存泄露,资源未正常关闭,死锁等原因
+
+多线程数据共享常用的是 Arc 和 Mutex
+
+thread.sleep 主动调用可以让线程睡眠,让出 CPU, 通常主线程退出了子线程就会退出, 所以子线程可能还没有执
+行完成, 甚至子线程还没有创建好,主线程可能就退出了
+
+thread.spawn 创建子线程,会返回一个 handle, handle.join 可以等待子线程结束,并且获得他的返回值(例如:闭
+包的返回值)
+
+如过父线程不是 main 线程, 父线程退出并不会影响子线程, 子线程会继续运行执行它返回,如过不返回那么就一
+直运行直到 main 线程退出
+
+无锁实现情况下,如果线程数过多,那么 CPU 缓存命中率会显著下降, CAS 重试次数大幅增加, 大量读写内存带宽
+成为瓶颈,
+
+Barrier 线程屏障可以让多个线程等待直到所有线程都执行到该位置
+
+#+begin_src rustic
+  use std::sync::{Arc, Barrier};
+  use std::thread;
+
+  fn main() {
+      let mut handles = Vec::with_capacity(6);
+      let barrier = Arc::new(Barrier::new(6));
+
+      for _ in 0..6 {
+          let b = barrier.clone();
+          handles.push(thread::spawn(move|| {
+              println!("before wait");
+              b.wait();
+              println!("after wait");
+          }));
+      }
+
+      for handle in handles {
+          handle.join().unwrap();
+      }
+  }
+#+end_src
+
+线程局部变量, 还有 thread-local 这个三方库可以使用
+#+begin_src rustic
+  use std::cell::RefCell;
+  use std::thread;
+
+  thread_local!(static FOO: RefCell<u32> = RefCell::new(1));
+
+  FOO.with(|f| {
+      assert_eq!(*f.borrow(), 1);
+      ,*f.borrow_mut() = 2;
+  });
+
+  // 每个线程开始时都会拿到线程局部变量的FOO的初始值
+  let t = thread::spawn(move|| {
+      FOO.with(|f| {
+          assert_eq!(*f.borrow(), 1);
+          ,*f.borrow_mut() = 3;
+      });
+  });
+
+  // 等待线程完成
+  t.join().unwrap();
+
+  // 尽管子线程中修改为了3，我们在这里依然拥有main线程中的局部值：2
+  FOO.with(|f| {
+      assert_eq!(*f.borrow(), 2);
+  });
+#+end_src
+
+还有 Condvar 条件线程同步
+
+~std::sync::*~ 再整理整理
+
+多线程共享、传递数据的方式就是通过消息传递(典型的 Actor 模型)或者将锁和 Arc 结合
+
+消息通信模型中,有多发送者->单消费者, 多发送者->多消费者,
+
+send 返回的是 Result 如过接收者不存在了,那么发送无意义就会返回 Err, recv 也是如此,发送者关闭后, 也会
+返回 Err 表示不再有消息过来。 ~try_recv~ 不会阻塞线程, 如过他返回的是 Err(Empty) 表示还没有消息, 返回
+是 Ok 表示获取到了消息, Err(Disconnected) 表示发送方关闭了。send 操作没有实现 Copy 的数据时还会会转
+移所有权
+
+如果直接 for 循环 rx, 那么会一直阻塞直到 tx 关闭了。mpsc 中 tx.clone() 可以让多个线程都允许发送消息
+
+mspc 分为异步和同步两种方式。默认是异步通道,也就是无论接收者是否在接收消息,发送者发送消息都不会阻塞。
+*注意这里是发送者发送消息不阻塞* 。 异步是指必须等到消息被接受后才解除阻塞, 而 ~mpsc::sync_channel(消息
+条数)~ 这里的消息条数是指缓冲的消息条数, 如过是 0,那么必须接收者在接收到消息之后才能继续发送, 而大于
+0 就可以缓冲 n 条, 达到就阻塞。对于异步情况,取决于内存大小。 *生产项目中一般不会用异步方式,会导致内存
+占用过大, 所以一般根据需要设置同步的缓冲大小。*
+
+如过想传递多种消息类型可以借助于枚举的数据
+
+mpsc 中只有所有发送者都关闭了或者接收者关闭了才会退出, 下面是一个大坑:
+#+begin_src rustic
+  use std::sync::mpsc;
+  fn main() {
+
+      use std::thread;
+
+      let (send, recv) = mpsc::channel();
+      let num_threads = 3;
+      for i in 0..num_threads {
+          let thread_send = send.clone();
+          thread::spawn(move || {
+              thread_send.send(i).unwrap();
+              println!("thread {:?} finished", i);
+          });
+      }
+
+      // 在这里drop send...
+
+      for x in recv {
+          println!("Got: {}", x);
+      }
+      println!("finished iterating");
+  }
+#+end_src
+子线程中 send 都会在子线程退出时关闭, 但是对于主线程中的 send 直到主线程退出才会被关闭, 所以必须要在
+rx for 循环之前执行 ~drop(tx)~
+
+还有一些比 mpsc 性能更好的三方库: crossbeam-channel, flume
+
+**** FINISH [[file:advance/concurrency-with-threads/message-passing.md][线程同步:消息传递]]
+CLOSED: [2024-05-25 Sat 23:02]
+**** NOTE [[file:advance/concurrency-with-threads/sync1.md][线程同步:锁、Condvar 和信号量]]
+CLOSED: [2024-05-25 Sat 23:34]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-25 Sat 23:34]
+:END:
+
+通常共享内存方式可以节省内存的拷贝,实现也简洁,但是锁竞争较多。通常用 Mutex 实现共享内存
+
+Arc 是多线程的 Rc, 其内部计数是多线程安全的。Mutex 具有内部可变性
+
+锁一定要获取后进行释放否则就会死锁, 所有很多变成语言直接用消息传递来实现共享和同步(go, erlang 等)
+
+~try_lock~ 尝试获取锁, 获取不到就返回错误, 而 lock 是阻塞直到获取锁, ~try_lock~ 一般用与防止死锁
+
+~std::sync::RwLock~ 读写锁可以解决大量读,少量写的情况, 当然包含 ~try_write、try_read~, 读写锁有个问题, 大量读会导致写多次失败, 大量写会导致读多次失败。
+
+RwLock 是操作系统提供的,实现比 Mutex 复杂,从锁的性能而言, mutex 要强一些。但是如过追求高并发读,而且
+对读取的资源还要长时间使用还是选择 RwLock
+
+注意: HashMap 的读写都非常快, 所以一般对 HashMap 的读写使用的是 Mutex
+
+~parking_lot~ 和 spin 是三方锁实现
+
+条件变量 控制线程的同步,可以结合 Mutex 实现线程挂起直到某个条件发生后继续执行共享数据。
+#+begin_src rustic
+  use std::sync::{Arc,Mutex,Condvar};
+  use std::thread::{spawn,sleep};
+  use std::time::Duration;
+
+  fn main() {
+      let flag = Arc::new(Mutex::new(false));
+      let cond = Arc::new(Condvar::new());
+      let cflag = flag.clone();
+      let ccond = cond.clone();
+
+      let hdl = spawn(move || {
+          let mut lock = cflag.lock().unwrap();
+          let mut counter = 0;
+
+          while counter < 3 {
+              while !*lock {
+                  // wait方法会接收一个MutexGuard<'a, T>，且它会自动地暂时释放这个锁，使其他线程可以拿到锁并进行数据更新。
+                  // 同时当前线程在此处会被阻塞，直到被其他地方notify后，它会将原本的MutexGuard<'a, T>还给我们，即重新获取到了锁，同时唤醒了此线程。
+                  lock = ccond.wait(lock).unwrap();
+              }
+
+              ,*lock = false;
+
+              counter += 1;
+              println!("inner counter: {}", counter);
+          }
+      });
+
+      let mut counter = 0;
+      loop {
+          sleep(Duration::from_millis(1000));
+          ,*flag.lock().unwrap() = true;
+          counter += 1;
+          if counter > 3 {
+              break;
+          }
+          println!("outside counter: {}", counter);
+          cond.notify_one();
+      }
+      hdl.join().unwrap();
+      println!("{:?}", flag);
+  }
+#+end_src
+
+
+信号量主要用于精准控制正在运行的最大任务数量, rust 标准库的信号量不推荐使用,建议使用
+~tokio::sync::Semaphore~
+
+**** NOTE [[file:advance/concurrency-with-threads/sync2.md][线程同步:Atomic 原子操作与内存顺序]]
+CLOSED: [2024-05-25 Sat 23:54]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-25 Sat 23:54]
+:END:
+
+Atomic 借助于硬件指令, CAS(Compare And Swap) 通过指令读取指定的内存地址, 然后判断其中是否等于给定的
+前置值,如果相等,则将其修改为新的值
+
+- 无锁(lock free)数据结构
+- 全局变量，例如全局自增 ID, 在后续章节会介绍
+- 跨线程计数器，例如可以用于统计指标
+
+需要深入在学学
+
+**** NOTE [[file:advance/concurrency-with-threads/send-sync.md][基于 Send 和 Sync 的线程安全]]
+CLOSED: [2024-05-26 Sun 00:03]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:03]
+:END:
+
+- 实现~Send~的类型可以在线程间安全的传递其所有权
+- 实现~Sync~的类型可以在线程间安全的共享(通过引用)
+
+这里还有一个潜在的依赖：一个类型要在线程间安全的共享的前提是，指向它的引用必须能在线程间传递。因为如
+果引用都不能被传递，我们就无法在多个线程间使用引用去访问同一个数据了。
+
+由上可知， *若类型 T 的引用 &T 是 Send，则 T 是 Sync* 。
+
+手动实现 ~Send~ 和 ~Sync~ 是不安全的，通常并不需要手动实现 Send 和 Sync trait，实现者需要使用~unsafe~ 小心
+维护并发安全保证。
+
+一个复合类型(例如结构体), 只要它内部的所有成员都实现了 ~Send~ 或者 ~Sync~ ，那么它就自动实现了 ~Send~ 或
+Sync。
+
+裸指针是没有实现 Sync 的我们可以包装一下,实现 Sync
+#+begin_src rustic
+  use std::thread;
+  use std::sync::Arc;
+  use std::sync::Mutex;
+
+  #[derive(Debug)]
+  struct MyBox(*const u8);
+  unsafe impl Sync for MyBox {}
+
+  fn main() {
+      let b = &MyBox(5 as *const u8);
+      let v = Arc::new(Mutex::new(b));
+      let t = thread::spawn(move || {
+          let _v1 =  v.lock().unwrap();
+      });
+
+      t.join().unwrap();
+  }
+
+#+end_src
+
 *** TODO [[file:advance/global-variable.md][全局变量]]
 *** TODO [[file:advance/errors.md][错误处理]]
 *** TODO [[file:advance/unsafe/intro.md][Unsafe Rust]] [0/2]

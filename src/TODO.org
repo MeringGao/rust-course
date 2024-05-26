@@ -604,7 +604,7 @@ CLOSED: [2024-05-20 Mon 19:35]
 CLOSED: [2024-05-20 Mon 19:35]
 
 * TODO Rust 语言进阶学习
-** TODO [[file:advance/intro.md][Rust 高级进阶]] [6/11]
+** TODO [[file:advance/intro.md][Rust 高级进阶]] [8/11]
 *** NOTE [[file:advance/lifetime/intro.md][生命周期]] [2/2]                                                       :笔记:
 CLOSED: [2024-05-20 Mon 23:11]
 :LOGBOOK:
@@ -1094,9 +1094,88 @@ Sync。
   }
 
 #+end_src
+*** NOTE [[file:advance/global-variable.md][全局变量]]
+CLOSED: [2024-05-26 Sun 13:06]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 13:06]
+:END:
 
-*** TODO [[file:advance/global-variable.md][全局变量]]
-*** TODO [[file:advance/errors.md][错误处理]]
+全局变量有 static 和 const, static 在运行期间只有一份数据, 而 const 是不确定的,可能复制多份, 以内联
+方式嵌入到代码中
+
+static 只有通过 unsafe 去修改, 如果是多线程同时修改,会造成脏数据. 并且 static 变量必须是编译器可以计
+算出来的值, 而且不能用函数, 例如: Mutex::new, 但是可以借助于社区库 ~lazy_static~
+
+~lazy_static! {static ref NAMES: Mutex<String> = Mutex::new(String::from("Sunface, Jack, Allen"));}~
+他的内部使用的是标准库的 sync::Once 每次访问变量时会有一些性能损失.
+
+也可以 Box::leak 来实现后赋值
+#+begin_src rustic
+  #[derive(Debug)]
+  struct Config {
+      a: String,
+      b: String
+  }
+  static mut CONFIG: Option<&mut Config> = None;
+
+  fn main() {
+      let c = Box::new(Config {
+          a: "A".to_string(),
+          b: "B".to_string(),
+      });
+
+      unsafe {
+          // 将`c`从内存中泄漏，变成`'static`生命周期
+          CONFIG = Some(Box::leak(c));
+          println!("{:?}", CONFIG);
+      }
+  }
+#+end_src
+
+Box::leak 还可以作为函数返回值,来实现给 static 赋值
+
+#+begin_src rustic
+  #[derive(Debug)]
+  struct Config {
+      a: String,
+      b: String,
+  }
+  static mut CONFIG: Option<&mut Config> = None;
+
+  fn init() -> Option<&'static mut Config> {
+      let c = Box::new(Config {
+          a: "A".to_string(),
+          b: "B".to_string(),
+      });
+
+      Some(Box::leak(c))
+  }
+
+
+  fn main() {
+      unsafe {
+          CONFIG = init();
+
+          println!("{:?}", CONFIG)
+      }
+  }
+#+end_src
+
+
+如果需要全局计数,状态控制并且多线程,最好是用原子类型
+
+在 Rust 标准库中提供了实验性的 lazy::OnceCell 和 lazy::SyncOnceCell (在 Rust 1.70.0版本及以上的标准
+库中，替换为稳定的 cell::OnceCell 和 sync::OnceLock )两种Cell ，前者用于单线程，后者用于多线程，它们
+用来存储堆上的信息，并且具有最多只能赋值一次的特性。 如实现一个多线程的日志组件 Logger
+
+*** NOTE [[file:advance/errors.md][错误处理]]
+CLOSED: [2024-05-26 Sun 13:26]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 13:26]
+:END:
+
+这里要多熟悉各种组合器 or,map等等
+
 *** TODO [[file:advance/unsafe/intro.md][Unsafe Rust]] [0/2]
 **** TODO [[file:advance/unsafe/superpowers.md][五种兵器]]
 **** TODO [[file:advance/unsafe/inline-asm.md][内联汇编]]

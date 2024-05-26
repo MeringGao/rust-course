@@ -1,0 +1,1361 @@
+#+title: Rust 语言圣经
+#+TAGS: 忽略(i) 没太懂(c) 笔记(n)
+#+TODO: TODO(t) | IGNORE(i) NOTE(n!/@) FINISH(f)
+
+* IGNORE [[file:about-book.md][关于本书]]                                                               :忽略:
+* IGNORE [[file:into-rust.md][进入 Rust 编程世界]]                                                     :忽略:
+* IGNORE [[file:first-try/sth-you-should-not-do.md][避免从入门到放弃]]                                                       :忽略:
+* IGNORE [[file:community.md][社区和锈书]]                                                             :忽略:
+* TODO [[file:some-thoughts.md][Xobserve: 一切皆可观测]]
+* TODO [[file:beat-ai.md][BeatAI: 工程师 AI 入门圣经]]
+* NOTE Rust 语言基础学习 [3/3]
+CLOSED: [2024-05-20 Mon 19:36]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:36]
+:END:
+
+** IGNORE [[file:first-try/intro.md][寻找牛刀，以便小试]]                                                   :忽略:
+*** IGNORE [[file:first-try/installation.md][安装 Rust 环境]]
+*** IGNORE [[file:first-try/editor.md][墙推 VSCode!]]
+*** IGNORE [[file:first-try/cargo.md][认识 Cargo]]
+*** IGNORE [[file:first-try/hello-world.md][不仅仅是 Hello world]]
+*** IGNORE [[file:first-try/slowly-downloading.md][下载依赖太慢了？]]
+** NOTE [[file:basic/intro.md][Rust 基础入门]] [14/14]                                                  :笔记:
+CLOSED: [2024-05-20 Mon 19:35]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:35]
+:END:
+
+*** IGNORE [[file:basic/variable.md][变量绑定与解构]]
+*** NOTE [[file:basic/base-type/index.md][基本类型]] [4/4]                                                       :笔记:
+CLOSED: [2024-03-31 Sun 21:22]
+:LOGBOOK:
+- State "NOTE"       from "FINISH"     [2024-05-15 Wed 21:49]
+:END:
+
+**** NOTE [[file:basic/base-type/numbers.md][数值类型]]
+CLOSED: [2024-05-13 Mon 22:31]
+:LOGBOOK:
+- State "NOTE"       from "IGNORE"     [2024-05-13 Mon 22:31]
+:END:
+
+对数整数, 有debug 和 release 不同环境下,溢出的表现不同, 可以使用 =wrapping_*, checked_*, overflowing_*, saturatin_*= 等方法
+
+浮点数比较特殊, 没有实现 Eq trait, 浮点数比较相等, 一般使用相减得到某个精度返回内的相等. 还有浮点操作结果可能是 NaN, NaN 和 NaN 是不相等的
+
+range 可以使用数字如, =1..5=, 或者 ~1..=5~ ,还可以使用字符返回如 ~'a'..'z'~
+
+**** FINISH [[file:basic/base-type/char-bool.md][字符、布尔、单元类型]]
+CLOSED: [2024-05-13 Mon 22:41]
+**** FINISH [[file:basic/base-type/statement-expression.md][语句与表达式]]
+CLOSED: [2024-05-13 Mon 22:46]
+**** FINISH [[file:basic/base-type/function.md][函数]]
+CLOSED: [2024-05-13 Mon 22:58]
+*** NOTE [[file:basic/ownership/index.md][所有权和借用]] [2/2]                                                   :笔记:
+CLOSED: [2024-05-15 Wed 21:49]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 21:49]
+:END:
+
+**** FINISH [[file:basic/ownership/ownership.md][所有权]]
+CLOSED: [2024-05-15 Wed 21:40]
+**** NOTE [[file:basic/ownership/borrowing.md][引用与借用]]
+CLOSED: [2024-05-15 Wed 21:40]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 21:40]
+:END:
+
+基本类型: i8,i32等等 变量绑定后执行 如 ~let y=x~ 会在栈中 copy 一份, 而 String 这种是转移所有权. 但是仍然有个有意思的地方就是 ~&T~ 也是类型, 且是基本类型, 基本类型实现了 Copy Trait, 因此在栈上复制一份. 更加要注意的是 ~&mut T~ 也是类型, 并且没有实现 Copy Trait,所以就会转移所有权, ~let a =10; let x = &mut a; let y=x;~
+#+begin_src rustic :result output code :wrap src txt
+  fn main(){
+      let mut a:i32 =10;
+      let x = &mut a;
+      let y=x;
+      println!("{},{}",x,y);
+  }
+#+end_src
+
+#+RESULTS:
+#+begin_src text
+  error[E0382]: borrow of moved value: `x`
+   --> src/main.rs:6:22
+    |
+  4 |     let x = &mut a;
+    |         - move occurs because `x` has type `&mut i32`, which does not implement the `Copy` trait
+  5 |     let y=x;
+    |           - value moved here
+  6 |     println!("{},{}",x,y);
+    |                      ^ value borrowed here after move
+    |
+    = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+  For more information about this error, try `rustc --explain E0382`.
+  error: could not compile `cargoqvod5U` (bin "cargoqvod5U") due to 1 previous error
+#+end_src
+
+*** NOTE [[file:basic/compound-type/intro.md][复合类型]] [5/5]                                                       :笔记:
+CLOSED: [2024-05-17 Fri 23:16]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:16]
+:END:
+
+**** NOTE [[file:basic/compound-type/string-slice.md][字符串与切片]]
+CLOSED: [2024-05-15 Wed 22:00]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 22:00]
+:END:
+
+一定要注意 &str 是 String 切片, /&String 是字符串引用/
+
+~[T:数字]~ 是数组类型 ~&[T]~ 是切片引用 ~[T]~ 是他解引用后的类型;
+
+#+begin_src rustic
+  let a:&str = "asdf";
+  let b:&String = &String::new();
+  let c:&str = &b[..];
+  let x:[i32;10] = [1; 10];
+  let y:&[i32] = &x[..6];
+  let z:[i32] = *y;
+#+end_src
+
+*重点要注意的是String 是 UTF-8 存储的, 对他进行切片一定在字符串的边界上,否
+则会出错, 原因是他的切面位置是按照字节进行的,而不是按照字符进行.*
+
+*String 的相关方法一定要搞清楚是字符为单位,还是字节为单位*
+
+**** FINISH [[file:basic/compound-type/tuple.md][元组]]
+CLOSED: [2024-05-15 Wed 22:30]
+
+**** NOTE [[file:basic/compound-type/struct.md][结构体]]
+CLOSED: [2024-05-15 Wed 22:38]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-15 Wed 22:38]
+:END:
+
+结构体某些字段转移, 就无法再使用了, 但是他的其他字段仍然是可以访问的.
+
+#+begin_src rustic
+  struct User{
+      username: String,
+      age: u32
+  }
+
+  let u1 = User{
+      username: String::from("账单"),
+      age: 10
+  }
+  let u2=User{
+      username:u1.username,
+      age: 11
+  }
+
+  println!("{}",u1); // 这里会报错
+  println!("{}",u1.age); // 这里不会报错
+
+#+end_src
+
+元组结构体在某些情况下可读性更强
+
+**** FINISH [[file:basic/compound-type/enum.md][枚举]]
+CLOSED: [2024-05-17 Fri 23:12]
+
+**** NOTE [[file:basic/compound-type/array.md][数组]]
+CLOSED: [2024-05-17 Fri 23:12]
+:LOGBOOK:
+- State "NOTE"       from "FINISH"     [2024-05-17 Fri 23:13]
+:END:
+
+数组类型: ~[i32, 10]~ 和 ~[i32,5]~ 是不同的类型, 注意区别就在于数组元素个
+数上. 如果一个函数希望接收数组类型, 那么有一种方式是使用 切片 ~&[T]~ 或
+者 ~fn some<T, const C:usize>(ar: [T,C])~ 用不可变的泛型类型
+
+*** NOTE [[file:basic/flow-control.md][流程控制]]
+CLOSED: [2024-05-17 Fri 23:17]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:17]
+:END:
+
+for 循环
+
+| 使用方法                      | 等价使用方式                                      | 所有权     |
+| ----------------------------- | ------------------------------------------------- | ---------- |
+| ~for item in collection~        | ~for item in IntoIterator::into_iter(collection)~   | 转移所有权 |
+| ~for item in &collection~       | ~for item in collection.iter()~                     | 不可变借用 |
+| ~for item in &mut collection~   | ~for item in collection.iter_mut()~                 | 可变借用   |
+
+loop 表达式可以通过 ~break value~ 返回值
+
+~if let pattern=value~ 和 ~while let pattern=value~ 都是可驳模式, 不需要穷尽. 而 ~let Some(x)=value;~ 就是
+错误的,他是不可驳模式,少了 None 匹配.
+
+*** NOTE [[file:basic/match-pattern/intro.md][模式匹配]]                                                             :笔记:
+CLOSED: [2024-05-17 Fri 23:30]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:30]
+:END:
+
+**** NOTE [[file:basic/match-pattern/match-if-let.md][match 和 if let]]
+CLOSED: [2024-05-17 Fri 23:22]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:22]
+:END:
+~v.iter().filter(|x| x == MyEnum::Foo);~ 语法是错误的, x 无法直接和枚举成员比较, 需要使用 match ,
+~matches!~ 更加简洁一些 ~v.iter().filter(|x| matches!(x, MyEnum::Foo));~
+
+**** FINISH [[file:basic/match-pattern/option.md][解构 Option]]
+CLOSED: [2024-05-17 Fri 23:24]
+
+**** FINISH [[file:basic/match-pattern/pattern-match.md][模式适用场景]]
+CLOSED: [2024-05-17 Fri 23:25]
+
+**** NOTE [[file:basic/match-pattern/all-patterns.md][全模式列表]]
+CLOSED: [2024-05-17 Fri 23:25]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-17 Fri 23:25]
+:END:
+
+match 匹配中 有些好用的例如: ~'a'..='y'~
+
+解构变量如: ~let p @ Point{x:a,y:b,..}=p;~
+
+*** FINISH [[file:basic/method.md][方法 Method]]
+CLOSED: [2024-05-17 Fri 23:29]
+
+*** NOTE [[file:basic/trait/intro.md][泛型和特征]] [4/4]                                                     :笔记:
+CLOSED: [2024-05-18 Sat 21:51]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 21:51]
+:END:
+
+**** NOTE [[file:basic/trait/generic.md][泛型 Generics]]
+CLOSED: [2024-05-18 Sat 20:53]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 20:53]
+:END:
+
+函数中使用泛型一般都会限制泛型实现了哪些 trait, 当前只要是泛型就都可以限制实现了哪些 trait
+
+impl 泛型结构体时 可以使用 ~impl<T> Stuc<T>~ 表示, 如果没有 ~impl<T>~ 那么就是对特定类型进行 impl 了例如
+~impl Stuc<i32>~
+
+**** NOTE [[file:basic/trait/trait.md][特征 Trait]]
+CLOSED: [2024-05-18 Sat 21:04]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 21:04]
+:END:
+
+trait 约束
+
+~pub fn notify(item1: &impl Summary, item2: &impl Summary) {}~ 可以表示为 ~pub fn notify<T:
+Summary>(item1: &T, item2: &T) {}~
+
+以后遇到参数需要限制实现了某些 trait 就可以用第二种了
+
+where 进行约束说明
+
+~fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {}~ 也可以使用 ~fn
+some_function<T, U>(t: &T, u: &U) -> i32 where T: Display + Clone, U: Clone + Debug {}~
+
+有条件是实现 trait ~impl<T: Display> ToString for T { // --snip--}~ 这里 T 实现 ToString 特征, 但是要
+求 T 已经实现了 Display 特征, 这里是标准库中只要实现了 Display 特征就都会实现 ToString 特征的样例
+
+注意函数返回值,也可以定义为改值的类型实现了某些 Triat 的类型,但是函数返回只能是一种类型, 所以这里只
+能返回一种类型, 下面是错误的, 因为可能返回 Post 也可能返回 Weibo 那么就不是某个确定的类型了
+
+#+begin_src rustic
+  fn returns_summarizable(switch: bool) -> impl Summary {
+      if switch {
+          Post {
+              title: String::from(
+                  "Penguins win the Stanley Cup Championship!",
+              ),
+              author: String::from("Iceburgh"),
+              content: String::from(
+                  "The Pittsburgh Penguins once again are the best \
+                   hockey team in the NHL.",
+              ),
+          }
+      } else {
+          Weibo {
+              username: String::from("horse_ebooks"),
+              content: String::from(
+                  "of course, as you probably already know, people",
+              ),
+          }
+      }
+  }
+#+end_src
+解决办法使用 Box<T> 智能指针, 函数定义如:
+- ~fn draw(x: Box<dyn Draw>)~ 这个函数的参数是通过 ~Box::new~ 创建的
+- ~fn draw(x: &dyn Draw)~ 这个函数的参数通过 引用 Box 对象, 如: ~let x=Box::new(y); draw(&x)~ 或者 只要 x 实现了 Draw 特征即可, 不一定用 Box::new(), 比如 i32 实现了 Draw 那么就可以直接 ~&value_i32~
+
+#+begin_src rustic
+  pub struct Screen<T: Draw> {
+      pub components: Vec<T>,
+  }
+
+  impl<T> Screen<T>
+  where
+      T: Draw,
+  {
+      pub fn run(&self) {
+          for component in self.components.iter() {
+              component.draw();
+          }
+      }
+  }
+
+  fn main() {
+      let screen = Screen {
+          components: vec![
+              Box::new(SelectBox {
+                  width: 75,
+                  height: 10,
+                  options: vec![
+                      String::from("Yes"),
+                      String::from("Maybe"),
+                      String::from("No"),
+                  ],
+              }),
+              Box::new(Button {
+                  width: 50,
+                  height: 10,
+                  label: String::from("OK"),
+              }),
+          ],
+      };
+
+      screen.run();
+  }
+#+end_src
+
+Box<dyn> 性能比 &dyn 弱一些, 因为他要两次解引用才能找到 vtable
+
+回忆一下泛型章节我们提到过的，泛型是在编译期完成处理的:编译器会为每一个泛型参数对应的具体类型生成一
+份代码,这种方式是 *静态分发(static dispatch)* ,因为是在编译期完成的,对于运行期性能完全没有任何影响.
+
+与静态分发相对应的是 *动态分发(dynamic dispatch)* ,在这种情况下,直到运行时,才能确定需要调用什么方法.
+之前代码中的关键字 ~dyn~ 正是在强调这一“动态”的特点.
+
+当使用特征对象时,Rust 必须使用动态分发.编译器无法知晓所有可能用于特征对象代码的类型,所以它也不知道应
+该调用哪个类型的哪个方法实现.为此,Rust 在运行时使用特征对象中的指针来知晓需要调用哪个方法.动态分发也
+阻止编译器有选择的内联方法代码,这会相应的禁用一些优化.
+
+下面这张图很好的解释了静态分发 ~Box<T>~ 和动态分发 ~Box<dyn Trait>~ 的区别:
+
+https://pic1.zhimg.com/80/v2-b771fe4cfc6ebd63d9aff42840eb8e67_1440w.jpg
+
+结合上文的内容和这张图可以了解:
+
+- *特征对象大小不固定*:这是因为,对于特征 ~Draw~ ,类型 ~Button~ 可以实现特征 ~Draw~ ,类型 ~SelectBox~ 也可以实
+  现特征 ~Draw~,因此特征没有固定大小
+- *几乎总是使用特征对象的引用方式*,如 ~&dyn Draw~ 、 ~Box<dyn Draw>~
+  - 虽然特征对象没有固定大小,但它的引用类型的大小是固定的,它由两个指针组成（ ~ptr~ 和 ~vptr~ ）,因此占用
+    两个指针大小
+  - 一个指针 ~ptr~ 指向实现了特征 ~Draw~ 的具体类型的实例,也就是当作特征 ~Draw~ 来用的类型的实例,比如类型
+    ~Button~ 的实例、类型 ~SelectBox~ 的实例
+  - 另一个指针 ~vptr~ 指向一个虚表 ~vtable~,~vtable~ 中保存了类型 ~Button~ 或类型 ~SelectBox~ 的实例对于可以
+    调用的实现于特征 ~Draw~ 的方法.当调用方法时,直接从 ~vtable~ 中找到方法并调用.之所以要使用一个 ~vtable~
+    来保存各实例的方法,是因为实现了特征 ~Draw~ 的类型有多种,这些类型拥有的方法各不相同,当将这些类型的
+    实例都当作特征 ~Draw~ 来使用时(此时,它们全都看作是特征 ~Draw~ 类型的实例),有必要区分这些实例各自有哪
+    些方法可调用
+
+简而言之,当类型 ~Button~ 实现了特征 ~Draw~ 时,类型 ~Button~ 的实例对象 ~btn~ 可以当作特征 ~Draw~ 的特征对象类
+型来使用, ~btn~ 中保存了作为特征对象的数据指针（指向类型 ~Button~ 的实例数据）和行为指针（指向 ~vtable~ ）.
+
+一定要注意,此时的 ~btn~ 是 ~Draw~ 的特征对象的实例,而不再是具体类型 ~Button~ 的实例,而且 ~btn~ 的 ~vtable~ 只
+包含了实现自特征 ~Draw~ 的那些方法（比如 ~draw~ ）,因此 ~btn~ 只能调用实现于特征 ~Draw~ 的 ~draw~ 方法,而不能
+调用类型 ~Button~ 本身实现的方法和类型 ~Button~ 实现于其他特征的方法. *也就是说, ~btn~ 是哪个特征对象的实例,它
+的 ~vtable~ 中就包含了该特征的方法.*
+
+
+*特征对象的限制*
+
+不是所有特征都能拥有特征对象, 只有对象安全的特征才行. 当一个特征的所有方法都有如下属性时, 它的对象才
+是安全的:
+- 方法的返回类型不能是 `Self`
+- 方法没有任何泛型参数
+
+**** FINISH [[file:basic/trait/trait-object.md][特征对象]]
+CLOSED: [2024-05-18 Sat 21:46]
+**** NOTE [[file:basic/trait/advance-trait.md][进一步深入特征]]
+CLOSED: [2024-05-18 Sat 21:50]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 21:50]
+:END:
+
+要把 rust 杂志里面 trait 那一章仔细理解几遍
+
+*** NOTE [[file:basic/collections/intro.md][集合类型]] [2/2]                                                       :笔记:
+CLOSED: [2024-05-18 Sat 22:39]
+:LOGBOOK:
+- State "NOTE"       from "NOTE"       [2024-05-18 Sat 22:48]
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 22:39]
+:END:
+
+生命周期, 在 rust 中是新玩意, 每个值都有生命周期, rust 中会给每个值计算生命周期, 但是当存在多个引用
+时 rust 可能自己算不出来,或者算不清楚, 这个时候需要人为的帮助它进行识别, 因此需要认为给参数或者值标
+识生命周期
+
+需要注意的是标注只是帮助编译器,并不会对引用的作用域有任何改动.
+
+#+begin_src rustic
+  &i32        // 一个引用
+  &'a i32     // 具有显式生命周期的引用
+  &'a mut i32 // 具有显式生命周期的可变引用
+#+end_src
+
+~fn useless<'a>(first: &'a i32, second: &'a i32) {}~
+
+该函数签名表明对于某些生命周期 ~'a~ ，函数的两个参数都至少跟 ~'a~ 活得一样久，同时函数的返回引用也至少跟
+~'a~ 活得一样久。实际上，这意味着返回值的生命周期与参数生命周期中的较小值一致：虽然两个参数的生命周期
+都是标注了 ~'a~ ，但是实际上这两个参数的真实生命周期可能是不一样的（生命周期 ~'a~ 不代表生命周期等于 ~'a~
+，而是大于等于 ~'a~ ）。
+
+当把具体的引用传给 ~longest~ 时，那生命周期 ~'a~ 的大小就是 ~x~ 和 ~y~ 的作用域的重合部分，换句话说，~'a~ 的
+大小将等于 ~x~ 和 ~y~ 中较小的那个。由于返回值的生命周期也被标记为 ~'a~ ，因此返回值的生命周期也是 ~x~ 和 ~y~
+中作用域较小的那个。
+
+#+begin_src rustic
+  fn main() {
+      let string1 = String::from("long string is long");
+      let result;
+      {
+          let string2 = String::from("xyz");
+          // longest<'a>(s1: &'a str, s2: &'a str)->&'a str{}
+          // 'a 这里可以理解为生命周期较小的那个, 也就是 string2
+          // result 也是 'a 周期, 所以他和 string2 生命周期相等,
+          // string2 离开了作用域, result 也就离开了, 因此println 编译不通过
+          result = longest(string1.as_str(), string2.as_str());
+
+      }
+      println!("The longest string is {}", result);
+  }
+
+#+end_src
+
+**** NOTE [[file:basic/collections/vector.md][动态数组 Vector]]
+CLOSED: [2024-05-18 Sat 22:22]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 22:22]
+:END:
+
+在 rust 里，实现了两种排序算法，分别为稳定的排序 ~sort~ 和 ~sort_by~ ，以及非稳定排序 ~sort_unstable~ 和
+~sort_unstable_by~ 。
+
+当然，这个所谓的 ~非稳定~ 并不是指排序算法本身不稳定，而是指在排序过程中对相等元素的处理方式。在 ~稳定~
+排序算法里，对相等的元素，不会对其进行重新排序。而在 ~不稳定~ 的算法里则不保证这点。
+
+总体而言， ~非稳定~ 排序的算法的速度会优于 ~稳定~ 排序算法，同时， ~稳定~ 排序还会额外分配原数组一半的空间。
+
+**** NOTE [[file:basic/collections/hashmap.md][KV 存储 HashMap]]
+CLOSED: [2024-05-18 Sat 22:35]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-18 Sat 22:35]
+:END:
+
+~map.entry(word).or_insert(0);~ 快速判断 key 是否存在, 不存在直接插值, 存在返回该值, or_insert 也会返
+回插入后的值
+
+hash 函数对不同的 key 计算 hash 值, 对于性能强的 hash 函数,冲突概率可能较高, 因此会被用于攻击, 而安
+全性强的 hash 函数性能较弱一些, 需要使用一些密码学技术, hashmap 默认使用了这种函数
+
+要追求性能可以找三方库试试,如 ahash, SipHash
+
+*** FINISH [[file:basic/lifetime.md][认识生命周期]]
+CLOSED: [2024-05-19 Sun 20:13]
+*** NOTE [[file:basic/result-error/intro.md][返回值和错误处理]] [2/2]                                               :笔记:
+CLOSED: [2024-05-19 Sun 22:03]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 22:03]
+:END:
+
+**** NOTE [[file:basic/result-error/panic.md][panic! 深入剖析]]
+CLOSED: [2024-05-19 Sun 20:18]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 20:18]
+:END:
+
+在 Rust 中，可以使用标准库中的 std::panic 模块提供的 catch_unwind 函数来捕获 panic。这个函数会捕获传
+给它的闭包中发生的 panic，并返回一个 Result。如果闭包没有 panic，那么返回的 Result 就是 Ok，其中包含
+了闭包的返回值。如果闭包 panic 了，那么返回的 Result 就是 Err，其中包含了 panic 的信息。
+
+#+begin_src rustic
+  use std::panic::{self, AssertUnwindSafe};
+
+  fn main() {
+      let result = panic::catch_unwind(AssertUnwindSafe(|| {
+
+          println!("hello!");
+          let v=vec![1,2,3];
+          v[99];
+          println!("goodbye!");
+      }));
+
+      match result {
+          Ok(_) => println!("执行成功"),
+          Err(err) => println!("捕获到 panic: {:?}", err),
+      }
+
+      println!("panic 之后继续执行");
+  }
+#+end_src
+
+#+RESULTS:
+: hello!
+: thread 'main' panicked at src/main.rs:9:10:
+: index out of bounds: the len is 3 but the index is 99
+: note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+: 捕获到 panic: Any { .. }
+: panic 之后继续执行
+
+debug 和 release 末实现都可以定义 panic 时的行为
+
+#+begin_src toml
+  [profile.release]
+  panic = 'abort'
+#+end_src
+
+可以自定义 panic 时的处理函数 https://doc.rust-lang.org/std/panic/fn.set_hook.html
+
+panic 还有一些比较深入的处理过程, 参考秘典之类的书籍
+
+**** NOTE [[file:basic/result-error/result.md][返回值 Result 和?]]
+CLOSED: [2024-05-19 Sun 21:55]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 21:55]
+:END:
+
+对于 ~?~ 操作服务, 返回值的签名和实际返回值错误类型是要兼容的,也就是实现了 From 特征, 就可以通过一种大
+而全的方式
+
+错误的类型也可以通过进行大而全的包裹, 也就是只要实现了 Error 特征, 但是这种会丢失错误原始信息
+#+begin_src rustic
+  use std::error::Error;
+  use std::fs::File;
+
+  fn main() -> Result<(), Box<dyn Error>> {
+      let f = File::open("hello.txt")?;
+
+      Ok(())
+  }
+#+end_src
+
+
+当然 option 类型也是可以 ~?~ 操作的
+
+*** NOTE [[file:basic/crate-module/intro.md][包和模块]] [3/3]                                                       :笔记:
+CLOSED: [2024-05-20 Mon 19:34]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:34]
+:END:
+
+**** NOTE [[file:basic/crate-module/crate.md][包 Crate]]
+CLOSED: [2024-05-19 Sun 22:09]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-19 Sun 22:09]
+:END:
+
+- 项目(Package)：可以用来构建、测试和分享包
+- 工作空间(WorkSpace)：对于大型项目，可以进一步将多个包联合在一起，组织成工作空间
+- 包(Crate)：一个由多个模块组成的树形结构，可以作为三方库进行分发，也可以生成可执行文件进行运行
+- 模块(Module)：可以一个文件多个模块，也可以一个文件一个模块，模块可以被认为是真实项目中的代码组织单元
+
+关注一下 Workspace 的内容, 这里没有讲到
+
+一般 main 作为主业务逻辑, mod 放在 lib 中, 在 main 中引用
+
+**** FINISH [[file:basic/crate-module/module.md][模块 Module]]
+CLOSED: [2024-05-20 Mon 19:31]
+**** FINISH [[file:basic/crate-module/use.md][使用 use 引入模块及受限可见性]]
+CLOSED: [2024-05-20 Mon 19:31]
+*** NOTE [[file:basic/comment.md][注释和文档]]                                                           :笔记:
+CLOSED: [2024-05-20 Mon 19:31]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:31]
+:END:
+
+一般 lib.rs 顶部 ~//!~ 或这 ~/*!  */~ 定义 lib 库的整体说明, 每个 mod 独立文件中可以定义, 也可以在 ~mod
+xxx{文档}~
+
+~///~ 这种就是函数或者结构体这种的文档
+
+*** NOTE [[file:basic/formatted-output.md][格式化输出]]
+CLOSED: [2024-05-20 Mon 19:34]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 19:34]
+:END:
+
+需要的时候过来找
+
+** FINISH [[file:basic-practice/intro.md][入门实战:文件搜索工具]] [6/6]
+CLOSED: [2024-05-20 Mon 19:34]
+*** FINISH [[file:basic-practice/base-features.md][基本功能]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/refactoring.md][增加模块化和错误处理]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/tests.md][测试驱动开发]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/envs.md][使用环境变量]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/stderr.md][重定向错误信息的输出]]
+CLOSED: [2024-05-20 Mon 19:35]
+*** FINISH [[file:basic-practice/iterators.md][使用迭代器来改进程序(可选)]]
+CLOSED: [2024-05-20 Mon 19:35]
+
+* TODO Rust 语言进阶学习
+** TODO [[file:advance/intro.md][Rust 高级进阶]] [8/11]
+*** NOTE [[file:advance/lifetime/intro.md][生命周期]] [2/2]                                                       :笔记:
+CLOSED: [2024-05-20 Mon 23:11]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 23:11]
+:END:
+
+生命周期最根本还是要知道数据什么时候被释放, 不能引用被释放的数据, 而编译器有时候并不是完全能够理解代
+码中的引用什么时候该释放掉对应的数据, 或这不知道被引用的数据的真正生命周期
+
+在 rust 秘典中有更为详细的讲述
+
+**** FINISH [[file:advance/lifetime/advance.md][深入生命周期]]
+CLOSED: [2024-05-20 Mon 23:13]
+**** FINISH [[file:advance/lifetime/static.md][&'static 和 T: 'static]]
+CLOSED: [2024-05-20 Mon 23:13]
+*** NOTE [[file:advance/functional-programing/intro.md][函数式编程: 闭包、迭代器]] [2/2]                                       :笔记:
+CLOSED: [2024-05-21 Tue 00:07]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-21 Tue 00:07]
+:END:
+
+**** NOTE [[file:advance/functional-programing/closure.md][闭包 Closure]]
+CLOSED: [2024-05-20 Mon 23:16]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 23:16]
+:END:
+
+闭包能够补捕获上下文中的值, 有点类似于函数初始化对象初始化,并且通过上下文对属性进行赋值
+
+需要注意闭包能够进行类型推导,而且一直使用该类型, 所以类型一定不要搞错了, 否则无法调用
+
+闭包可以用 Fn 来进行类型定义, 闭包也可以作为结构体的字段类型; 例如:
+
+#+begin_src rustic
+  struct Cacher<T>
+  where
+      T: Fn(u32) -> u32,
+  {
+      query: T,
+      value: Option<u32>,
+  }
+#+end_src
+
+另外闭包可以理解为匿名函数, Fn 也可以表示参数或字段类型为函数
+
+函数是无法捕获上线文中的值的, 这是和闭包明显的不同点, 闭包捕获的数据是要单独内存来存储的
+
+闭包捕获值的三种方式:
+- FnOnce 所有权移动到闭包中, 因此值传递一次后就不能再传递了
+- FnMut 以可变借用的方式捕获上线文中的值, 从而可以修改该值 ~let mut update_string =  |str| s.push_str(str);~, 注意变量名前面的 ~mut~
+- Fn 以不可变借用的方式捕获上下文中的值
+
+*这里还得细看几遍*
+
+**** NOTE [[file:advance/functional-programing/iterator.md][迭代器 Iterator]]
+CLOSED: [2024-05-20 Mon 23:48]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-20 Mon 23:48]
+:END:
+
+for 循环的值是一个迭代器, 如过不是迭代器,那么必须实现了 IntoIterator 特征, 例如数组就是这样的,
+~array.into_iter()~
+
+迭代器是惰性的, for 循环之前只是创建了迭代器,不会进行任何迭代. for 循环中迭代器的 next 函数会返回
+Option,如过是 Some 就继续迭代, None 就停止. 我们也可以自己调用 next 方法
+
+#+begin_src rustic
+  pub trait Iterator {
+      type Item;
+
+      fn next(&mut self) -> Option<Self::Item>;
+
+      // 省略其余有默认实现的方法
+  }
+#+end_src
+
+- ~into_iter()~ 转移所有权
+- ~iter()~ 借用
+- ~iter_mut()~ 可变借用
+
+需要搞清楚那些是消费性适配器和迭代器适配器:
+- 消费用, 通过 next 消费掉迭代器中的元素并最终返回一个值
+- 迭代器适配器是返回一个新的迭代器, 这是链式调用的关键
+
+~找迭代器适配器有哪些~, ~消费性又有那些~
+
+*** NOTE [[file:advance/into-types/intro.md][深入类型]] [4/4]                                                       :笔记:
+CLOSED: [2024-05-26 Sun 00:44]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:44]
+:END:
+
+**** NOTE [[file:advance/into-types/converse.md][类型转换]]
+CLOSED: [2024-05-26 Sun 00:44]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:44]
+:END:
+
+主要是 as, From TryFrom TryInto 这类 Trait
+
+**** NOTE [[file:advance/into-types/custom-type.md][newtype 和 类型别名]]
+CLOSED: [2024-05-26 Sun 00:25]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:25]
+:END:
+
+借助于元组结构体可以将已有类型包装起来, 然后去实现对已有类型的额外操作
+
+~type xxx=yyy~ 可以实现类型别名提升可读性,减少代码重复编写。
+
+**** NOTE [[file:advance/into-types/sized.md][Sized 和不定长类型 DST]]
+CLOSED: [2024-05-26 Sun 00:29]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:29]
+:END:
+
+DST 动态类型,并不是指 String,Vec 之类的在运行期间内存使用可以动态变换的类型,他们只是数据存储在堆上,
+但是栈上有一块固定大小存储着一个引用类型,包含了内存地址,元素数量,分配空间等信息, 通过这些信息,编译器
+知道他们的实际大小。最重要是栈上的引用类型是大小固定的,因此他们也是固定大小的类型。
+
+动态类型是指编译器无法获知累类型大小, 如过在代码中使用 DST 编译无法通过
+#+begin_src rustic
+  fn my_function(n: usize) {
+      let array = [123; n];
+  }
+#+end_src
+n 在编译器无法知道大小, 而数组类型的一个组成部分就是长度, 长度是动态的, 就变成了 DST 了, 另外切片也是 DST 也就是 ~[T]~, 但是切片引用不是 DST ~&[T]~, 因为切片引用存储在栈上,包含固定大小(指针直线堆,长度信息等)
+
+特征对象只能通过引用或者 Box 方式来使用特征对象
+#+begin_src rustic
+  fn foobar_1(thing: &dyn MyThing) {}     // OK
+  fn foobar_2(thing: Box<dyn MyThing>) {} // OK
+  fn foobar_3(thing: MyThing) {}          // ERROR!
+#+end_src
+
+#+begin_src rustic
+  fn generic<T: ?Sized>(t: &T) {
+      // --snip--
+  }
+#+end_src
+
+~?Sized~ 特征用于表明类型 T 既有可能是固定大小的类型，也可能是动态大小的类型。还有一点要注意的是，函数
+参数类型从 T 变成了 &T，因为 T 可能是动态大小的，因此需要用一个固定大小的指针(引用)来包裹它。
+
+如何把一个动态大小类型转换成固定大小的类型：使用引用指向这些动态数据，然后在引用中存储相关的内存位置、
+长度等信息。
+
+Box<str> 使用了一个引用来指向 str，嗯，满足了第一个条件。但是第二个条件呢？Box 中有该 str 的长度信息
+吗？显然是 No。那为什么特征就可以变成特征对象？其实这个还蛮复杂的，简单来说，对于特征对象，编译器无
+需知道它具体是什么类型，只要知道它能调用哪几个方法即可，因此编译器帮我们实现了剩下的一切。
+
+
+
+
+
+**** NOTE [[file:advance/into-types/enum-int.md][枚举和整数]]
+CLOSED: [2024-05-26 Sun 00:43]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:43]
+:END:
+
+用到再看
+
+*** NOTE [[file:advance/smart-pointer/intro.md][智能指针]] [5/5]                                                       :笔记:
+CLOSED: [2024-05-26 Sun 00:17]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:17]
+:END:
+
+**** NOTE [[file:advance/smart-pointer/box.md][Box<T>堆对象分配]]
+CLOSED: [2024-05-26 Sun 00:16]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:16]
+:END:
+
+Box::leak 再仔细看看
+
+**** FINISH [[file:advance/smart-pointer/deref.md][Deref 解引用]]
+CLOSED: [2024-05-26 Sun 00:16]
+**** FINISH [[file:advance/smart-pointer/drop.md][Drop 释放资源]]
+CLOSED: [2024-05-26 Sun 00:16]
+**** FINISH [[file:advance/smart-pointer/rc-arc.md][Rc 与 Arc 实现 1vN 所有权机制]]
+CLOSED: [2024-05-26 Sun 00:16]
+**** FINISH [[file:advance/smart-pointer/cell-refcell.md][Cell 与 RefCell 内部可变性]]
+CLOSED: [2024-05-26 Sun 00:16]
+*** NOTE [[file:advance/circle-self-ref/intro.md][循环引用与自引用]] [2/2]                                               :笔记:
+CLOSED: [2024-05-26 Sun 00:23]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:23]
+:END:
+
+**** NOTE [[file:advance/circle-self-ref/circle-reference.md][Weak 与循环引用]]
+CLOSED: [2024-05-26 Sun 00:19]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:19]
+:END:
+
+| Weak                                            | Rc                                        |
+| ----------------------------------------------- | ----------------------------------------- |
+| 不计数                                           | 引用计数                                    |
+| 不拥有所有权                                      | 拥有值的所有权                               |
+| 不阻止值被释放(drop)                               | 所有权计数归零，才能 drop                    |
+| 引用的值存在返回 Some，不存在返回 None               | 引用的值必定存在                             |
+| 通过 upgrade 取到 Option<Rc<T>>，然后再取值        | 通过 Deref 自动解引用，取值无需任何操作        |
+
+通过这个对比，可以非常清晰的看出 Weak 为何这么弱，而这种弱恰恰非常适合我们实现以下的场景：
+
+- 持有一个 Rc 对象的临时引用，并且不在乎引用的值是否依然存在
+- 阻止 Rc 导致的循环引用，因为 Rc 的所有权机制，会导致多个 Rc 都无法计数归零
+
+使用方式简单总结下：对于父子引用关系，可以让父节点通过 Rc 来引用子节点，然后让子节点通过 Weak 来引用
+父节点。
+
+**** NOTE [[file:advance/circle-self-ref/self-referential.md][结构体中的自引用]]
+CLOSED: [2024-05-26 Sun 00:22]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:22]
+:END:
+
+用到了再看, 主要是 Option, unsafe, Pin 实现
+
+*** NOTE [[file:advance/concurrency-with-threads/intro.md][多线程并发编程]] [6/6]                                                 :笔记:
+CLOSED: [2024-05-26 Sun 00:15]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:15]
+:END:
+
+**** FINISH [[file:advance/concurrency-with-threads/concurrency-parallelism.md][并发和并行]]
+CLOSED: [2024-05-25 Sat 21:44]
+**** NOTE [[file:advance/concurrency-with-threads/thread.md][使用多线程]]
+CLOSED: [2024-05-25 Sat 21:45]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-25 Sat 21:45]
+:END:
+
+rust 中线程没有提供杀死的接口, 原因可能是线程直接杀死导致内存泄露,资源未正常关闭,死锁等原因
+
+多线程数据共享常用的是 Arc 和 Mutex
+
+thread.sleep 主动调用可以让线程睡眠,让出 CPU, 通常主线程退出了子线程就会退出, 所以子线程可能还没有执
+行完成, 甚至子线程还没有创建好,主线程可能就退出了
+
+thread.spawn 创建子线程,会返回一个 handle, handle.join 可以等待子线程结束,并且获得他的返回值(例如:闭
+包的返回值)
+
+如过父线程不是 main 线程, 父线程退出并不会影响子线程, 子线程会继续运行执行它返回,如过不返回那么就一
+直运行直到 main 线程退出
+
+无锁实现情况下,如果线程数过多,那么 CPU 缓存命中率会显著下降, CAS 重试次数大幅增加, 大量读写内存带宽
+成为瓶颈,
+
+Barrier 线程屏障可以让多个线程等待直到所有线程都执行到该位置
+
+#+begin_src rustic
+  use std::sync::{Arc, Barrier};
+  use std::thread;
+
+  fn main() {
+      let mut handles = Vec::with_capacity(6);
+      let barrier = Arc::new(Barrier::new(6));
+
+      for _ in 0..6 {
+          let b = barrier.clone();
+          handles.push(thread::spawn(move|| {
+              println!("before wait");
+              b.wait();
+              println!("after wait");
+          }));
+      }
+
+      for handle in handles {
+          handle.join().unwrap();
+      }
+  }
+#+end_src
+
+线程局部变量, 还有 thread-local 这个三方库可以使用
+#+begin_src rustic
+  use std::cell::RefCell;
+  use std::thread;
+
+  thread_local!(static FOO: RefCell<u32> = RefCell::new(1));
+
+  FOO.with(|f| {
+      assert_eq!(*f.borrow(), 1);
+      ,*f.borrow_mut() = 2;
+  });
+
+  // 每个线程开始时都会拿到线程局部变量的FOO的初始值
+  let t = thread::spawn(move|| {
+      FOO.with(|f| {
+          assert_eq!(*f.borrow(), 1);
+          ,*f.borrow_mut() = 3;
+      });
+  });
+
+  // 等待线程完成
+  t.join().unwrap();
+
+  // 尽管子线程中修改为了3，我们在这里依然拥有main线程中的局部值：2
+  FOO.with(|f| {
+      assert_eq!(*f.borrow(), 2);
+  });
+#+end_src
+
+还有 Condvar 条件线程同步
+
+~std::sync::*~ 再整理整理
+
+多线程共享、传递数据的方式就是通过消息传递(典型的 Actor 模型)或者将锁和 Arc 结合
+
+消息通信模型中,有多发送者->单消费者, 多发送者->多消费者,
+
+send 返回的是 Result 如过接收者不存在了,那么发送无意义就会返回 Err, recv 也是如此,发送者关闭后, 也会
+返回 Err 表示不再有消息过来。 ~try_recv~ 不会阻塞线程, 如过他返回的是 Err(Empty) 表示还没有消息, 返回
+是 Ok 表示获取到了消息, Err(Disconnected) 表示发送方关闭了。send 操作没有实现 Copy 的数据时还会会转
+移所有权
+
+如果直接 for 循环 rx, 那么会一直阻塞直到 tx 关闭了。mpsc 中 tx.clone() 可以让多个线程都允许发送消息
+
+mspc 分为异步和同步两种方式。默认是异步通道,也就是无论接收者是否在接收消息,发送者发送消息都不会阻塞。
+*注意这里是发送者发送消息不阻塞* 。 异步是指必须等到消息被接受后才解除阻塞, 而 ~mpsc::sync_channel(消息
+条数)~ 这里的消息条数是指缓冲的消息条数, 如过是 0,那么必须接收者在接收到消息之后才能继续发送, 而大于
+0 就可以缓冲 n 条, 达到就阻塞。对于异步情况,取决于内存大小。 *生产项目中一般不会用异步方式,会导致内存
+占用过大, 所以一般根据需要设置同步的缓冲大小。*
+
+如过想传递多种消息类型可以借助于枚举的数据
+
+mpsc 中只有所有发送者都关闭了或者接收者关闭了才会退出, 下面是一个大坑:
+#+begin_src rustic
+  use std::sync::mpsc;
+  fn main() {
+
+      use std::thread;
+
+      let (send, recv) = mpsc::channel();
+      let num_threads = 3;
+      for i in 0..num_threads {
+          let thread_send = send.clone();
+          thread::spawn(move || {
+              thread_send.send(i).unwrap();
+              println!("thread {:?} finished", i);
+          });
+      }
+
+      // 在这里drop send...
+
+      for x in recv {
+          println!("Got: {}", x);
+      }
+      println!("finished iterating");
+  }
+#+end_src
+子线程中 send 都会在子线程退出时关闭, 但是对于主线程中的 send 直到主线程退出才会被关闭, 所以必须要在
+rx for 循环之前执行 ~drop(tx)~
+
+还有一些比 mpsc 性能更好的三方库: crossbeam-channel, flume
+
+**** FINISH [[file:advance/concurrency-with-threads/message-passing.md][线程同步:消息传递]]
+CLOSED: [2024-05-25 Sat 23:02]
+**** NOTE [[file:advance/concurrency-with-threads/sync1.md][线程同步:锁、Condvar 和信号量]]
+CLOSED: [2024-05-25 Sat 23:34]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-25 Sat 23:34]
+:END:
+
+通常共享内存方式可以节省内存的拷贝,实现也简洁,但是锁竞争较多。通常用 Mutex 实现共享内存
+
+Arc 是多线程的 Rc, 其内部计数是多线程安全的。Mutex 具有内部可变性
+
+锁一定要获取后进行释放否则就会死锁, 所有很多变成语言直接用消息传递来实现共享和同步(go, erlang 等)
+
+~try_lock~ 尝试获取锁, 获取不到就返回错误, 而 lock 是阻塞直到获取锁, ~try_lock~ 一般用与防止死锁
+
+~std::sync::RwLock~ 读写锁可以解决大量读,少量写的情况, 当然包含 ~try_write、try_read~, 读写锁有个问题, 大量读会导致写多次失败, 大量写会导致读多次失败。
+
+RwLock 是操作系统提供的,实现比 Mutex 复杂,从锁的性能而言, mutex 要强一些。但是如过追求高并发读,而且
+对读取的资源还要长时间使用还是选择 RwLock
+
+注意: HashMap 的读写都非常快, 所以一般对 HashMap 的读写使用的是 Mutex
+
+~parking_lot~ 和 spin 是三方锁实现
+
+条件变量 控制线程的同步,可以结合 Mutex 实现线程挂起直到某个条件发生后继续执行共享数据。
+#+begin_src rustic
+  use std::sync::{Arc,Mutex,Condvar};
+  use std::thread::{spawn,sleep};
+  use std::time::Duration;
+
+  fn main() {
+      let flag = Arc::new(Mutex::new(false));
+      let cond = Arc::new(Condvar::new());
+      let cflag = flag.clone();
+      let ccond = cond.clone();
+
+      let hdl = spawn(move || {
+          let mut lock = cflag.lock().unwrap();
+          let mut counter = 0;
+
+          while counter < 3 {
+              while !*lock {
+                  // wait方法会接收一个MutexGuard<'a, T>，且它会自动地暂时释放这个锁，使其他线程可以拿到锁并进行数据更新。
+                  // 同时当前线程在此处会被阻塞，直到被其他地方notify后，它会将原本的MutexGuard<'a, T>还给我们，即重新获取到了锁，同时唤醒了此线程。
+                  lock = ccond.wait(lock).unwrap();
+              }
+
+              ,*lock = false;
+
+              counter += 1;
+              println!("inner counter: {}", counter);
+          }
+      });
+
+      let mut counter = 0;
+      loop {
+          sleep(Duration::from_millis(1000));
+          ,*flag.lock().unwrap() = true;
+          counter += 1;
+          if counter > 3 {
+              break;
+          }
+          println!("outside counter: {}", counter);
+          cond.notify_one();
+      }
+      hdl.join().unwrap();
+      println!("{:?}", flag);
+  }
+#+end_src
+
+
+信号量主要用于精准控制正在运行的最大任务数量, rust 标准库的信号量不推荐使用,建议使用
+~tokio::sync::Semaphore~
+
+**** NOTE [[file:advance/concurrency-with-threads/sync2.md][线程同步:Atomic 原子操作与内存顺序]]
+CLOSED: [2024-05-25 Sat 23:54]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-25 Sat 23:54]
+:END:
+
+Atomic 借助于硬件指令, CAS(Compare And Swap) 通过指令读取指定的内存地址, 然后判断其中是否等于给定的
+前置值,如果相等,则将其修改为新的值
+
+- 无锁(lock free)数据结构
+- 全局变量，例如全局自增 ID, 在后续章节会介绍
+- 跨线程计数器，例如可以用于统计指标
+
+需要深入在学学
+
+**** NOTE [[file:advance/concurrency-with-threads/send-sync.md][基于 Send 和 Sync 的线程安全]]
+CLOSED: [2024-05-26 Sun 00:03]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 00:03]
+:END:
+
+- 实现~Send~的类型可以在线程间安全的传递其所有权
+- 实现~Sync~的类型可以在线程间安全的共享(通过引用)
+
+这里还有一个潜在的依赖：一个类型要在线程间安全的共享的前提是，指向它的引用必须能在线程间传递。因为如
+果引用都不能被传递，我们就无法在多个线程间使用引用去访问同一个数据了。
+
+由上可知， *若类型 T 的引用 &T 是 Send，则 T 是 Sync* 。
+
+手动实现 ~Send~ 和 ~Sync~ 是不安全的，通常并不需要手动实现 Send 和 Sync trait，实现者需要使用~unsafe~ 小心
+维护并发安全保证。
+
+一个复合类型(例如结构体), 只要它内部的所有成员都实现了 ~Send~ 或者 ~Sync~ ，那么它就自动实现了 ~Send~ 或
+Sync。
+
+裸指针是没有实现 Sync 的我们可以包装一下,实现 Sync
+#+begin_src rustic
+  use std::thread;
+  use std::sync::Arc;
+  use std::sync::Mutex;
+
+  #[derive(Debug)]
+  struct MyBox(*const u8);
+  unsafe impl Sync for MyBox {}
+
+  fn main() {
+      let b = &MyBox(5 as *const u8);
+      let v = Arc::new(Mutex::new(b));
+      let t = thread::spawn(move || {
+          let _v1 =  v.lock().unwrap();
+      });
+
+      t.join().unwrap();
+  }
+
+#+end_src
+
+*** NOTE [[file:advance/global-variable.md][全局变量]]
+CLOSED: [2024-05-26 Sun 13:06]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 13:06]
+:END:
+
+全局变量有 static 和 const, static 在运行期间只有一份数据, 而 const 是不确定的,可能复制多份, 以内联
+方式嵌入到代码中
+
+static 只有通过 unsafe 去修改, 如果是多线程同时修改,会造成脏数据. 并且 static 变量必须是编译器可以计
+算出来的值, 而且不能用函数, 例如: Mutex::new, 但是可以借助于社区库 ~lazy_static~
+
+~lazy_static! {static ref NAMES: Mutex<String> = Mutex::new(String::from("Sunface, Jack, Allen"));}~
+他的内部使用的是标准库的 sync::Once 每次访问变量时会有一些性能损失.
+
+也可以 Box::leak 来实现后赋值
+#+begin_src rustic
+  #[derive(Debug)]
+  struct Config {
+      a: String,
+      b: String
+  }
+  static mut CONFIG: Option<&mut Config> = None;
+
+  fn main() {
+      let c = Box::new(Config {
+          a: "A".to_string(),
+          b: "B".to_string(),
+      });
+
+      unsafe {
+          // 将`c`从内存中泄漏，变成`'static`生命周期
+          CONFIG = Some(Box::leak(c));
+          println!("{:?}", CONFIG);
+      }
+  }
+#+end_src
+
+Box::leak 还可以作为函数返回值,来实现给 static 赋值
+
+#+begin_src rustic
+  #[derive(Debug)]
+  struct Config {
+      a: String,
+      b: String,
+  }
+  static mut CONFIG: Option<&mut Config> = None;
+
+  fn init() -> Option<&'static mut Config> {
+      let c = Box::new(Config {
+          a: "A".to_string(),
+          b: "B".to_string(),
+      });
+
+      Some(Box::leak(c))
+  }
+
+
+  fn main() {
+      unsafe {
+          CONFIG = init();
+
+          println!("{:?}", CONFIG)
+      }
+  }
+#+end_src
+
+
+如果需要全局计数,状态控制并且多线程,最好是用原子类型
+
+在 Rust 标准库中提供了实验性的 lazy::OnceCell 和 lazy::SyncOnceCell (在 Rust 1.70.0版本及以上的标准
+库中，替换为稳定的 cell::OnceCell 和 sync::OnceLock )两种Cell ，前者用于单线程，后者用于多线程，它们
+用来存储堆上的信息，并且具有最多只能赋值一次的特性。 如实现一个多线程的日志组件 Logger
+
+*** NOTE [[file:advance/errors.md][错误处理]]
+CLOSED: [2024-05-26 Sun 13:26]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-05-26 Sun 13:26]
+:END:
+
+这里要多熟悉各种组合器 or,map等等
+*** TODO [[file:advance/unsafe/intro.md][Unsafe Rust]] [0/2]
+**** TODO [[file:advance/unsafe/superpowers.md][五种兵器]]
+**** TODO [[file:advance/unsafe/inline-asm.md][内联汇编]]
+*** TODO [[file:advance/macro.md][Macro 宏编程]]
+*** TODO [[file:advance/async/intro.md][async/await 异步编程]] [0/7]
+**** TODO [[file:advance/async/getting-started.md][async 编程入门]]
+**** TODO [[file:advance/async/future-excuting.md][底层探秘: Future 执行与任务调度]]
+**** TODO [[file:advance/async/pin-unpin.md][定海神针 Pin 和 Unpin]]
+**** TODO [[file:advance/async/async-await.md][async/await 和 Stream 流处理]]
+**** TODO [[file:advance/async/multi-futures-simultaneous.md][同时运行多个 Future]]
+**** TODO [[file:advance/async/pain-points-and-workarounds.md][一些疑难问题的解决办法]]
+**** TODO [[file:advance/async/web-server.md][实践应用:Async Web 服务器]]
+** TODO [[file:advance-practice1/intro.md][进阶实战1: 实现一个 web 服务器]] [0/3]
+*** TODO [[file:advance-practice1/web-server.md][单线程版本]]
+*** TODO [[file:advance-practice1/multi-threads.md][多线程版本]]
+*** TODO [[file:advance-practice1/graceful-shutdown.md][优雅关闭和资源清理]]
+** TODO [[file:advance-practice/intro.md][进阶实战2: 实现一个简单 Redis]] [0/12]
+*** TODO [[file:advance-practice/overview.md][tokio 概览]]
+*** TODO [[file:advance-practice/getting-startted.md][使用初印象]]
+*** TODO [[file:advance-practice/spawning.md][创建异步任务]]
+*** TODO [[file:advance-practice/shared-state.md][共享状态]]
+*** TODO [[file:advance-practice/channels.md][消息传递]]
+*** TODO [[file:advance-practice/io.md][I/O]]
+*** TODO [[file:advance-practice/frame.md][解析数据帧]]
+*** TODO [[file:advance-practice/async.md][深入 async]]
+*** TODO [[file:advance-practice/select.md][select]]
+*** TODO [[file:advance-practice/stream.md)][类似迭代器的 Stream]]
+*** TODO [[file:advance-practice/graceful-shutdown.md][优雅的关闭]]
+*** TODO [[file:advance-practice/bridging-with-sync.md][异步跟同步共存]]
+** TODO [[file:difficulties/intro.md][Rust 难点攻关]] [0/6]
+*** TODO [[file:difficulties/slice.md][切片和切片引用]]
+*** TODO [[file:difficulties/eq.md][Eq 和 PartialEq]]
+*** TODO [[file:difficulties/string.md][String、&str 和 str TODO]]
+*** TODO [[file:difficulties/lifetime.md][作用域、生命周期和 NLL TODO]]
+*** TODO [[file:difficulties/move-copy.md][move、Copy 和 Clone TODO]]
+*** TODO [[file:advance/difficulties/pointer.md][裸指针、引用和智能指针 TODO]]
+* TODO 常用工具链
+** TODO [[file:test/intro.md][自动化测试]]
+*** TODO [[file:test/write-tests.md][编写测试及控制执行]]
+*** TODO [[file:test/unit-integration-test.md][单元测试和集成测试]]
+*** TODO [[file:test/assertion.md][断言 assertion]]
+*** TODO [[file:test/ci.md][用 GitHub Actions 进行持续集成]]
+*** TODO [[file:test/benchmark.md][基准测试 benchmark]]
+** TODO [[file:cargo/intro.md][Cargo 使用指南]]
+*** TODO [[file:cargo/getting-started.md][上手使用]]
+*** TODO [[file:cargo/guide/intro.md][基础指南]]
+**** TODO [[file:cargo/guide/why-exist.md][为何会有 Cargo]]
+**** TODO [[file:cargo/guide/download-package.md][下载并构建 Package]]
+**** TODO [[file:cargo/guide/dependencies.md][添加依赖]]
+**** TODO [[file:cargo/guide/package-layout.md][Package 目录结构]]
+**** TODO [[file:cargo/guide/cargo-toml-lock.md][Cargo.toml vs Cargo.lock]]
+**** TODO [[file:cargo/guide/tests-ci.md][测试和 CI]]
+**** TODO [[file:cargo/guide/cargo-cache.md][Cargo 缓存]]
+**** TODO [[file:cargo/guide/build-cache.md][Build 缓存]]
+*** TODO [[file:cargo/reference/intro.md][进阶指南]]
+**** TODO [[file:cargo/reference/specify-deps.md][指定依赖项]]
+**** TODO [[file:cargo/reference/deps-overriding.md][依赖覆盖]]
+**** TODO [[file:cargo/reference/manifest.md][Cargo.toml 清单详解]]
+**** TODO [[file:cargo/reference/cargo-target.md][Cargo Target]]
+**** TODO [[file:cargo/reference/workspaces.md][工作空间 Workspace]]
+**** TODO [[file:cargo/reference/features/intro.md][条件编译 Features]]
+***** TODO [[file:cargo/reference/features/examples.md][Features 示例]]
+**** TODO [[file:cargo/reference/profiles.md][发布配置 Profile]]
+**** TODO [[file:cargo/reference/configuration.md][通过 config.toml 对 Cargo 进行配置]]
+**** TODO [[file:cargo/reference/publishing-on-crates.io.md][发布到 crates.io]]
+**** TODO [[file:cargo/reference/build-script/intro.md][构建脚本 build.rs]]
+***** TODO [[file:cargo/reference/build-script/examples.md][构建脚本示例]]
+
+* TODO 开发实践
+
+** TODO [[file:usecases/intro.md][企业落地实践]]
+*** TODO [[file:usecases/aws-rust.md][AWS 为何这么喜欢 Rust?]]
+** TODO [[file:logs/intro.md][日志和监控]]
+*** TODO [[file:logs/about-log.md][日志详解]]
+*** TODO [[file:logs/log.md][日志门面 log]]
+*** TODO [[file:logs/tracing.md][使用 tracing 记录日志]]
+*** TODO [[file:logs/tracing-logger.md][自定义 tracing 的输出格式]]
+*** TODO [[file:logs/observe/intro.md][监控]]
+**** TODO [[file:logs/observe/about-observe.md][可观测性]]
+**** TODO [[file:logs/observe/trace.md][分布式追踪]]
+** TODO [[file:practice/intro.md][Rust 最佳实践]]
+*** TODO [[file:practice/third-party-libs.md][日常开发三方库精选]]
+*** TODO [[file:practice/naming.md][命名规范]]
+*** TODO [[file:practice/interview.md][面试经验]]
+*** TODO [[file:practice/best-pratice.md][代码开发实践 todo]]
+** TODO [[file:too-many-lists/intro.md][手把手带你实现链表]]
+*** TODO [[file:too-many-lists/do-we-need-it.md][我们到底需不需要链表]]
+*** TODO [[file:too-many-lists/bad-stack/intro.md][不太优秀的单向链表:栈]]
+**** TODO [[file:too-many-lists/bad-stack/layout.md][数据布局]]
+**** TODO [[file:too-many-lists/bad-stack/basic-operations.md][基本操作]]
+**** TODO [[file:too-many-lists/bad-stack/final-code.md][最后实现]]
+*** TODO [[file:too-many-lists/ok-stack/intro.md][还可以的单向链表]]
+**** TODO [[file:too-many-lists/ok-stack/type-optimizing.md][优化类型定义]]
+**** TODO [[file:too-many-lists/ok-stack/peek.md][定义 Peek 函数]]
+**** TODO [[file:too-many-lists/ok-stack/iter.md][IntoIter 和 Iter]]
+**** TODO [[file:too-many-lists/ok-stack/itermut.md][IterMut 以及完整代码]]
+*** TODO [[file:too-many-lists/persistent-stack/intro.md][持久化单向链表]]
+**** TODO [[file:too-many-lists/persistent-stack/layout.md][数据布局和基本操作]]
+**** TODO [[file:too-many-lists/persistent-stack/drop-arc.md][Drop、Arc 及完整代码]]
+*** TODO [[file:too-many-lists/deque/intro.md][不咋样的双端队列]]
+**** TODO [[file:too-many-lists/deque/layout.md][数据布局和基本操作]]
+**** TODO [[file:too-many-lists/deque/peek.md][Peek]]
+**** TODO [[file:too-many-lists/deque/symmetric.md][基本操作的对称镜像]]
+**** TODO [[file:too-many-lists/deque/iterator.md][迭代器]]
+**** TODO [[file:too-many-lists/deque/final-code.md][最终代码]]
+*** TODO [[file:too-many-lists/unsafe-queue/intro.md][不错的 unsafe 队列]]
+**** TODO [[file:too-many-lists/unsafe-queue/layout.md][数据布局]]
+**** TODO [[file:too-many-lists/unsafe-queue/basics.md][基本操作]]
+**** TODO [[file:too-many-lists/unsafe-queue/miri.md][Miri]]
+**** TODO [[file:too-many-lists/unsafe-queue/stacked-borrow.md][栈借用]]
+**** TODO [[file:too-many-lists/unsafe-queue/testing-stacked-borrow.md][测试栈借用]]
+**** TODO [[file:too-many-lists/unsafe-queue/layout2.md][数据布局 2]]
+**** TODO [[file:too-many-lists/unsafe-queue/extra-junk.md][额外的操作]]
+**** TODO [[file:too-many-lists/unsafe-queue/final-code.md][最终代码]]
+*** TODO [[file:too-many-lists/production-unsafe-deque/intro.md][生产级的双向 unsafe 队列]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/layout.md][数据布局]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/variance-and-phantomData.md][型变与子类型]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/basics.md][基础结构]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/drop-and-panic-safety.md][恐慌与安全]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/boring-combinatorics.md][无聊的组合]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/filling-in-random-bits.md][其它特征]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/testing.md][测试]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/send-sync-and-compile-tests.md][Send,Sync和编译测试]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/implementing-cursors.md][实现游标]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/testing-cursors.md][测试游标]]
+**** TODO [[file:too-many-lists/production-unsafe-deque/final-code.md][最终代码]]
+*** TODO [[file:too-many-lists/advanced-lists/intro.md][使用高级技巧实现链表]]
+**** TODO [[file:too-many-lists/advanced-lists/double-singly.md][双单向链表]]
+**** TODO [[file:too-many-lists/advanced-lists/stack-allocated.md][栈上的链表]]
+* TODO 攻克编译错误
+** TODO [[file:compiler/intro.md][征服编译错误]]
+
+*** TODO [[file:compiler/fight-with-compiler/intro.md][对抗编译检查]]
+**** TODO [[file:compiler/fight-with-compiler/lifetime/intro.md][生命周期]]
+***** TODO [[file:compiler/fight-with-compiler/lifetime/too-long1.md][生命周期过大-01]]
+***** TODO [[file:compiler/fight-with-compiler/lifetime/too-long2.md][生命周期过大-02]]
+***** TODO [[file:compiler/fight-with-compiler/lifetime/loop.md][循环中的生命周期]]
+***** TODO [[file:compiler/fight-with-compiler/lifetime/closure-with-static.md][闭包碰到特征对象-01]]
+**** TODO [[file:compiler/fight-with-compiler/borrowing/intro.md][重复借用]]
+***** TODO [[file:compiler/fight-with-compiler/borrowing/ref-exist-in-out-fn.md][同时在函数内外使用引用]]
+***** TODO [[file:compiler/fight-with-compiler/borrowing/borrow-distinct-fields-of-struct.md][智能指针引起的重复借用错误]]
+**** TODO [[file:compiler/fight-with-compiler/unconstrained.md][类型未限制(todo)]]
+**** TODO [[file:compiler/fight-with-compiler/phantom-data.md][幽灵数据(todo)]]
+*** TODO [[file:compiler/pitfalls/index.md][Rust 常见陷阱]]
+**** TODO [[file:compiler/pitfalls/use-vec-in-for.md][for 循环中使用外部数组]]
+**** TODO [[file:compiler/pitfalls/stack-overflow.md][线程类型导致的栈溢出]]
+**** TODO [[file:compiler/pitfalls/arithmetic-overflow.md][算术溢出导致的 panic]]
+**** TODO [[file:compiler/pitfalls/closure-with-lifetime.md][闭包中奇怪的生命周期]]
+**** TODO [[file:compiler/pitfalls/the-disabled-mutability.md][可变变量不可变？]]
+**** TODO [[file:compiler/pitfalls/multiple-mutable-references.md][可变借用失败引发的深入思考]]
+**** TODO [[file:compiler/pitfalls/lazy-iterators.md][不太勤快的迭代器]]
+**** TODO [[file:compiler/pitfalls/weird-ranges.md][奇怪的序列 x..y]]
+**** TODO [[file:compiler/pitfalls/iterator-everywhere.md][无处不在的迭代器]]
+**** TODO [[file:compiler/pitfalls/main-with-channel-blocked.md][线程间传递消息导致主线程无法结束]]
+**** TODO [[file:compiler/pitfalls/utf8-performance.md][警惕 UTF-8 引发的性能隐患]]
+
+* TODO 性能优化
+** TODO [[file:profiling/intro.md][Rust 性能优化 todo]]
+
+*** TODO [[file:profiling/memory/intro.md][深入内存 todo]]
+**** TODO [[file:profiling/memory/pointer-ref.md][指针和引用 todo]]
+**** TODO [[file:profiling/memory/uninit.md][未初始化内存 todo]]
+**** TODO [[file:profiling/memory/allocation.md][内存分配 todo]]
+**** TODO [[file:profiling/memory/layout.md][内存布局 todo]]
+**** TODO [[file:profiling/memory/virtual.md][虚拟内存 todo]]
+*** TODO [[file:profiling/performance/intro.md][性能调优 doing]]
+**** TODO [[file:profiling/performance/string.md][字符串操作性能]]
+**** TODO [[file:profiling/performance/deep-into-move.md][深入理解 move]]
+**** TODO [[file:profiling/performance/early-optimise.md][糟糕的提前优化 todo]]
+**** TODO [[file:profiling/performance/clone-copy.md][Clone 和 Copy todo]]
+**** TODO [[file:profiling/performance/runtime-check.md][减少 Runtime check(todo)]]
+**** TODO [[file:profiling/performance/cpu-cache.md][CPU 缓存性能优化 todo]]
+**** TODO [[file:profiling/performance/calculate.md][计算性能优化 todo]]
+**** TODO [[file:profiling/performance/heap-stack.md][堆和栈 todo]]
+**** TODO [[file:profiling/performance/allocator.md][内存 allocator todo]]
+**** TODO [[file:profiling/performance/tools.md][常用性能测试工具 todo]]
+**** TODO [[file:profiling/performance/enum.md][Enum 内存优化 todo]]
+*** TODO [[file:profiling/compiler/intro.md][编译优化 todo]]
+**** TODO [[file:profiling/compiler/llvm.md][LLVM todo]]
+**** TODO [[file:profiling/compiler/attributes.md][常见属性标记 todo]]
+**** TODO [[file:profiling/compiler/speed-up.md][提升编译速度 todo]]
+**** TODO [[file:profiling/compiler/optimization/intro.md][编译器优化 todo]]
+***** TODO [[file:profiling/compiler/optimization/option.md][Option 枚举 todo]]

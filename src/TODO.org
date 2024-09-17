@@ -1296,9 +1296,17 @@ CLOSED: [2024-05-26 Sun 22:33]
 
 这块还得是秘典和宏小册去学习
 
-*** TODO [[file:advance/async/intro.md][async/await 异步编程]] [0/7]
-**** TODO [[file:advance/async/getting-started.md][async 编程入门]]
-**** TODO [[file:advance/async/future-excuting.md][底层探秘: Future 执行与任务调度]]
+*** TODO [[file:advance/async/intro.md][async/await 异步编程]] [2/7]
+**** FINISH [[file:advance/async/getting-started.md][async 编程入门]]
+CLOSED: [2024-05-27 Mon 22:18]
+**** NOTE [[file:advance/async/future-excuting.md][底层探秘: Future 执行与任务调度]]
+CLOSED: [2024-06-08 Sat 21:22]
+:LOGBOOK:
+- State "NOTE"       from "TODO"       [2024-06-08 Sat 21:22]
+:END:
+
+Feture 被 poll 后直到返回 Ready
+
 **** TODO [[file:advance/async/pin-unpin.md][定海神针 Pin 和 Unpin]]
 **** TODO [[file:advance/async/async-await.md][async/await 和 Stream 流处理]]
 **** TODO [[file:advance/async/multi-futures-simultaneous.md][同时运行多个 Future]]

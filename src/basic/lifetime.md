@@ -2,7 +2,7 @@
 
 各位读者，之前的集合章节挺简单吧？是不是安逸了挺久了？要不咱们加点料？来试试 Rust 中令人闻风丧胆的生命周期？
 
-生命周期，简而言之就是引用的有效作用域。在大多数时候，我们无需手动的声明生命周期，因为编译器可以自动进行推导，用类型来类比下：
+生命周期，简而言之就是引用的有效作用域。在大多数时候，我们无需手动声明生命周期，因为编译器可以自动进行推导，用类型来类比下：
 
 - 就像编译器大部分时候可以自动推导类型 <-> 一样，编译器大多数时候也可以自动推导生命周期
 - 在多种类型存在时，编译器往往要求我们手动标明类型 <-> 当多个生命周期存在，且编译器无法推导出某个引用的生命周期时，就需要我们手动标明生命周期
@@ -287,7 +287,7 @@ error[E0515]: cannot return value referencing local variable `result` // 返回�
 那遇到这种情况该怎么办？最好的办法就是返回内部字符串的所有权，然后把字符串的所有权转移给调用者：
 
 ```rust
-fn longest<'a>(_x: &str, _y: &str) -> String {
+fn longest(_x: &str, _y: &str) -> String {
     String::from("really long string")
 }
 
@@ -647,7 +647,7 @@ where
 
 ## 课后练习
 
-> [Rust By Practice](https://practice-zh.course.rs/lifetime/basic.html)，支持代码在线编辑和运行，并提供详细的习题解答。（本节暂无习题解答）
+> [Rust By Practice](https://practice-zh.course.rs/lifetime/basic.html)，支持代码在线编辑和运行，并提供详细的[习题解答](https://github.com/sunface/rust-by-practice/blob/master/solutions/lifetime/basic.md)。
 
 ## 总结
 

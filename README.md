@@ -16,6 +16,9 @@
 
 </div>
 
+**号外号外，特大新闻！本书苦作者久矣，准备自我革命了，欢迎大家跟鄙书一起向作者拍砖**: https://github.com/sunface/rust-course/issues/1563
+
+
 ## 教程简介
 
 - 在线阅读: https://course.rs
@@ -45,6 +48,7 @@
 🏆
 
 <table>
+    <tbody>
     <tr>
         <td align="center">
             <a href="https://github.com/EluvK">
@@ -61,6 +65,7 @@
             </a>
         </td>
     </tr>
+    </tbody>
 </table>
 
 <br />
@@ -68,6 +73,7 @@
 🏅
 
 <table>
+    <tbody>
     <tr>
         <td align="center">
             <a href="https://github.com/SUN-LG">
@@ -98,6 +104,7 @@
             </a>
         </td>
     </tr>
+    </tbody>
 </table>
 
 ## 创作感悟
@@ -118,7 +125,7 @@
 
 ## 开源协议
 
-在开源版权上，我们选择了 [No License](https://www.google.com.hk/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwigkv-KtMT0AhXFdXAKHdI4BCcQFnoECAQQAw&url=https%3A%2F%2Fchoosealicense.com%2Fno-permission%2F&usg=AOvVaw3M2Q4IbdhnpJ2K71TF7SPB)，这意味着读者可以随意的 fork 和阅读，但是**不能私下修改后再包装分发**，如果有这方面的需求，请联系我们，望理解。
+在开源版权上，我们选择了 [No License](https://choosealicense.com/no-permission/)，这意味着读者可以随意的 fork 和阅读，但是**不能私下修改后再包装分发**，如果有这方面的需求，请联系我们，望理解。
 
 ## 借鉴的书籍
 

@@ -70,7 +70,7 @@ webp = []
 gif = { version = "0.11.1", optional = true }
 ```
 
-**这种可选依赖的写法会自动定义一个与依赖同名的 feature，也就是 `gif` feature**，这样一来，当我们启用 `gif` feature 时，该依赖库也会被自动引入并启用：例如通过 `--feature gif` 的方式启用 feature 。
+**这种可选依赖的写法会自动定义一个与依赖同名的 feature，也就是 `gif` feature**，这样一来，当我们启用 `gif` feature 时，该依赖库也会被自动引入并启用：例如通过 `--features gif` 的方式启用 feature 。
 
 > 注意：目前来说，`[feature]` 中定义的 feature 还不能与已引入的依赖库同名。但是在 `nightly` 中已经提供了实验性的功能用于改变这一点: [namespaced features](https://doc.rust-lang.org/stable/cargo/reference/unstable.html#namespaced-features)
 
@@ -146,7 +146,7 @@ parallel = ["jpeg-decoder/rayon"]
 
 <img src="https://pic2.zhimg.com/80/v2-251973b0cc83f35cd6858bf21dd00ed6_1440w.png" />
 
-由于这种不可控性，我们需要让 `启用feature = 添加特性` 这个等式成立，换而言之，**启用一个 feature 不应该导致某个功能被禁止**。这样才能的让多个包启用同一个依赖的不同 features。
+由于这种不可控性，我们需要让 `启用feature = 添加特性` 这个等式成立，换而言之，**启用一个 feature 不应该导致某个功能被禁止**。这样才能让多个包启用同一个依赖的不同 features。
 
 例如，如果我们想可选的支持 `no_std` 环境(不使用标准库)，那么有两种做法：
 

@@ -18,13 +18,13 @@ fn add(i: i32, j: i32) -> i32 {
 
 ## 函数要点
 
-- 函数名和变量名使用[蛇形命名法(snake case)](https://course.rs/practice/naming.html)，例如 `fn add_two() -> {}`
+- 函数名和变量名使用[蛇形命名法(snake case)](https://course.rs/practice/naming.html)，例如 `fn add_two() {}`
 - 函数的位置可以随便放，Rust 不关心我们在哪里定义了函数，只要有定义即可
 - 每个函数参数都需要标注类型
 
 ## 函数参数
 
-Rust 是强类型语言，因此需要你为每一个函数参数都标识出它的具体类型，例如：
+Rust 是静态类型语言，因此需要你为每一个函数参数都标识出它的具体类型，例如：
 
 ```rust
 fn main() {
@@ -172,7 +172,7 @@ error[E0308]: mismatched types // 类型不匹配
 
 ##### 永不返回的发散函数 `!`
 
-当用 `!` 作函数返回类型的时候，表示该函数永不返回( diverge function )，特别的，这种语法往往用做会导致程序崩溃的函数：
+当用 `!` 作函数返回类型的时候，表示该函数永不返回( diverging functions )，特别的，这种语法往往用做会导致程序崩溃的函数：
 
 ```rust
 fn dead_end() -> ! {

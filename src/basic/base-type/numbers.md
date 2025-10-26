@@ -29,7 +29,7 @@ Rust 使用一个相对传统的语法来创建整数（`1`，`2`，...）和浮
 
 此外，`isize` 和 `usize` 类型取决于程序运行的计算机 CPU 类型： 若 CPU 是 32 位的，则这两个类型是 32 位的，同理，若 CPU 是 64 位，那么它们则是 64 位。
 
-整形字面量可以用下表的形式书写：
+整型字面量可以用下表的形式书写：
 
 | 数字字面量         | 示例          |
 | ------------------ | ------------- |
@@ -258,30 +258,48 @@ Rust 的位运算基本上和其他语言一样
 
 ```rust
 fn main() {
-    // 二进制为00000010
-    let a:i32 = 2;
+    // 无符号8位整数，二进制为00000010
+    let a: u8 = 2; // 也可以写 let a: u8 = 0b_0000_0010;
+
     // 二进制为00000011
-    let b:i32 = 3;
+    let b: u8 = 3;
 
-    println!("(a & b) value is {}", a & b);
+    // {:08b}：左高右低输出二进制01，不足8位则高位补0
+    println!("a value is        {:08b}", a);
 
-    println!("(a | b) value is {}", a | b);
+    println!("b value is        {:08b}", b);
 
-    println!("(a ^ b) value is {}", a ^ b);
+    println!("(a & b) value is  {:08b}", a & b);
 
-    println!("(!b) value is {} ", !b);
+    println!("(a | b) value is  {:08b}", a | b);
 
-    println!("(a << b) value is {}", a << b);
+    println!("(a ^ b) value is  {:08b}", a ^ b);
 
-    println!("(a >> b) value is {}", a >> b);
+    println!("(!b) value is     {:08b}", !b);
+
+    println!("(a << b) value is {:08b}", a << b);
+
+    println!("(a >> b) value is {:08b}", a >> b);
 
     let mut a = a;
     // 注意这些计算符除了!之外都可以加上=进行赋值 (因为!=要用来判断不等于)
     a <<= b;
-    println!("(a << b) value is {}", a);
+    println!("(a << b) value is {:08b}", a);
 }
 ```
 
+
+对于移位运算，Rust 会检查它是否超出该整型的位数范围，如果超出，则会报错 overflow。比如，一个 8 位的整型，如果试图移位 8 位，就会报错，但如果移位 7 位就不会。Rust 这样做的理由也很简单，如果移位太多，那么这个移位后的数字就是全 0 或者全 1，所以移位操作不如直接写 0 或者 -1，这很可能意味着这里的代码是有问题的。需要注意的是，不论 debug 模式还是 release 模式，Rust 都会检查溢出。
+
+```rust
+fn main() {
+   let a: u8 = 255;
+   let b = a>>7; // ok
+   let b = a<<7; // ok
+   let b = a>>8; // overflow
+   let b = a<<8; // overflow
+}
+```
 
 ## 序列(Range)
 
@@ -345,7 +363,7 @@ use num::complex::Complex;
 
 ## 总结
 
-之前提到了过 Rust 的数值类型和运算跟其他语言较为相似，但是实际上，除了语法上的不同之外，还是存在一些差异点：
+之前提到过 Rust 的数值类型和运算跟其他语言相似，事实上还是存在一些差异，例如语法差异，再比如：
 
 - **Rust 拥有相当多的数值类型**. 因此你需要熟悉这些类型所占用的字节数，这样就知道该类型允许的大小范围以及你选择的类型是否能表达负数
 - **类型转换必须是显式的**. Rust 永远也不会偷偷把你的 16bit 整数转换成 32bit 整数
